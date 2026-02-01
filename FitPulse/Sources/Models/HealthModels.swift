@@ -548,51 +548,6 @@ struct Insight: Identifiable {
     }
 }
 
-// MARK: - Weekly Summary
-struct WeeklySummary: Identifiable {
-    let id: UUID
-    let weekStartDate: Date
-    let totalActiveCalories: Double
-    let totalWorkouts: Int
-    let totalWorkoutMinutes: Double
-    let averageSleep: Double
-    let averageHRV: Double
-    let averageRecoveryScore: Double
-    let totalSteps: Int
-    let weightChange: Double?
-    let dailySummaries: [DailyHealthSummary]
-
-    var weekEndDate: Date {
-        Calendar.current.date(byAdding: .day, value: 6, to: weekStartDate) ?? weekStartDate
-    }
-
-    init(
-        id: UUID = UUID(),
-        weekStartDate: Date,
-        totalActiveCalories: Double,
-        totalWorkouts: Int,
-        totalWorkoutMinutes: Double,
-        averageSleep: Double,
-        averageHRV: Double,
-        averageRecoveryScore: Double,
-        totalSteps: Int,
-        weightChange: Double? = nil,
-        dailySummaries: [DailyHealthSummary]
-    ) {
-        self.id = id
-        self.weekStartDate = weekStartDate
-        self.totalActiveCalories = totalActiveCalories
-        self.totalWorkouts = totalWorkouts
-        self.totalWorkoutMinutes = totalWorkoutMinutes
-        self.averageSleep = averageSleep
-        self.averageHRV = averageHRV
-        self.averageRecoveryScore = averageRecoveryScore
-        self.totalSteps = totalSteps
-        self.weightChange = weightChange
-        self.dailySummaries = dailySummaries
-    }
-}
-
 // MARK: - Workout Type Mapping
 extension HKWorkoutActivityType {
     var displayName: String {
