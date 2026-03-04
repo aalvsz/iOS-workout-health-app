@@ -332,6 +332,16 @@ struct RecoveryFlag: Identifiable {
         case overtraining = "Overtraining Risk"
         case underRecovery = "Under-Recovery"
 
+        var displayName: String {
+            switch self {
+            case .lowHRV: return String(localized: "Low HRV")
+            case .elevatedHR: return String(localized: "Elevated Heart Rate")
+            case .lowSleep: return String(localized: "Insufficient Sleep")
+            case .overtraining: return String(localized: "Overtraining Risk")
+            case .underRecovery: return String(localized: "Under-Recovery")
+            }
+        }
+
         var icon: String {
             switch self {
             case .lowHRV: return "waveform.path.ecg"
@@ -345,15 +355,15 @@ struct RecoveryFlag: Identifiable {
         var recommendation: String {
             switch self {
             case .lowHRV:
-                return "Consider light activity and stress management today."
+                return String(localized: "Consider light activity and stress management today.")
             case .elevatedHR:
-                return "Your body may be fighting something. Prioritize rest."
+                return String(localized: "Your body may be fighting something. Prioritize rest.")
             case .lowSleep:
-                return "Aim for an earlier bedtime tonight."
+                return String(localized: "Aim for an earlier bedtime tonight.")
             case .overtraining:
-                return "Take a rest day or do very light activity."
+                return String(localized: "Take a rest day or do very light activity.")
             case .underRecovery:
-                return "Focus on sleep, nutrition, and hydration."
+                return String(localized: "Focus on sleep, nutrition, and hydration.")
             }
         }
     }

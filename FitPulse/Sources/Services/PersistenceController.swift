@@ -24,15 +24,37 @@ class PersistenceController {
         static let goalPredictions = "goalPredictions"
         static let scheduledNotifications = "scheduledNotifications"
         static let notificationSettings = "notificationSettings"
+        static let workoutTemplates = "workoutTemplates"
     }
 
     private init() {}
+
+    // MARK: - Cloud Sync Hook
+
+    private func notifyCloudSync(recordType: String, recordID: String?) {
+        Task { @MainActor in
+            guard AuthService.shared.isSignedIn else { return }
+            try? await CloudSyncService.shared.pushRecord(type: recordType, id: recordID)
+        }
+    }
+
+    // MARK: - Modified At Tracking
+
+    func setModifiedAt(_ date: Date, for recordType: String, id: String) {
+        userDefaults.set(date.timeIntervalSince1970, forKey: "modifiedAt_\(recordType)_\(id)")
+    }
+
+    func getModifiedAt(for recordType: String, id: String) -> Date? {
+        let interval = userDefaults.double(forKey: "modifiedAt_\(recordType)_\(id)")
+        return interval > 0 ? Date(timeIntervalSince1970: interval) : nil
+    }
 
     // MARK: - User Profile
     func saveProfile(_ profile: UserProfile) {
         if let encoded = try? JSONEncoder().encode(profile) {
             userDefaults.set(encoded, forKey: Keys.userProfile)
         }
+        notifyCloudSync(recordType: "UserProfile", recordID: profile.id.uuidString)
     }
 
     func loadProfile() -> UserProfile {
@@ -48,6 +70,7 @@ class PersistenceController {
         var meals = loadMeals()
         meals.append(meal)
         saveMeals(meals)
+        notifyCloudSync(recordType: "Meal", recordID: meal.id.uuidString)
     }
 
     func loadMeals(for date: Date? = nil) -> [Meal] {
@@ -92,6 +115,7 @@ class PersistenceController {
         if let encoded = try? JSONEncoder().encode(entries) {
             userDefaults.set(encoded, forKey: Keys.weightHistory)
         }
+        notifyCloudSync(recordType: "WeightEntry", recordID: entry.id.uuidString)
     }
 
     func loadWeightHistory() -> [WeightEntry] {
@@ -161,6 +185,7 @@ class PersistenceController {
         if let encoded = try? JSONEncoder().encode(plans) {
             userDefaults.set(encoded, forKey: Keys.savedMealPlans)
         }
+        notifyCloudSync(recordType: "DayMealPlan", recordID: plan.date.ISO8601Format())
     }
 
     func loadSavedMealPlans() -> [DayMealPlan] {
@@ -184,6 +209,7 @@ class PersistenceController {
         if let encoded = try? JSONEncoder().encode(entries) {
             userDefaults.set(encoded, forKey: Keys.hydrationEntries)
         }
+        notifyCloudSync(recordType: "HydrationEntry", recordID: entry.id.uuidString)
     }
 
     func loadHydrationEntries(for date: Date) -> [HydrationEntry] {
@@ -229,6 +255,9 @@ class PersistenceController {
         if let encoded = try? JSONEncoder().encode(streaks) {
             userDefaults.set(encoded, forKey: Keys.streaks)
         }
+        for streak in streaks {
+            notifyCloudSync(recordType: "Streak", recordID: streak.type.rawValue)
+        }
     }
 
     func loadStreaks() -> [Streak] {
@@ -258,6 +287,9 @@ class PersistenceController {
     func saveAchievements(_ achievements: [Achievement]) {
         if let encoded = try? JSONEncoder().encode(achievements) {
             userDefaults.set(encoded, forKey: Keys.achievements)
+        }
+        for achievement in achievements {
+            notifyCloudSync(recordType: "Achievement", recordID: achievement.id)
         }
     }
 
@@ -322,6 +354,9 @@ class PersistenceController {
             if let encoded = try? JSONEncoder().encode(completed) {
                 userDefaults.set(encoded, forKey: Keys.completedChallenges)
             }
+            notifyCloudSync(recordType: "CompletedChallenge", recordID: challenge.id.uuidString)
+        } else {
+            notifyCloudSync(recordType: "ActiveChallenge", recordID: challenge.id.uuidString)
         }
 
         if let encoded = try? JSONEncoder().encode(challenges) {
@@ -370,6 +405,7 @@ class PersistenceController {
         if let encoded = try? JSONEncoder().encode(predictions) {
             userDefaults.set(encoded, forKey: Keys.goalPredictions)
         }
+        notifyCloudSync(recordType: "GoalPrediction", recordID: prediction.goalType.rawValue)
     }
 
     func loadGoalPredictions() -> [GoalPrediction] {
@@ -439,6 +475,7 @@ class PersistenceController {
             "types": types.map { $0.rawValue }
         ]
         userDefaults.set(settings, forKey: Keys.notificationSettings)
+        notifyCloudSync(recordType: "NotificationSettings", recordID: "default")
     }
 
     func loadNotificationSettings() -> (enabled: Bool, types: [CoachNotificationType]) {
@@ -451,6 +488,37 @@ class PersistenceController {
         let types = typeStrings.compactMap { CoachNotificationType(rawValue: $0) }
 
         return (enabled, types.isEmpty ? CoachNotificationType.allCases : types)
+    }
+
+    // MARK: - Workout Templates
+
+    func saveWorkoutTemplate(_ template: WorkoutTemplate) {
+        var templates = loadWorkoutTemplates()
+        if let index = templates.firstIndex(where: { $0.id == template.id }) {
+            templates[index] = template
+        } else {
+            templates.append(template)
+        }
+        if let encoded = try? JSONEncoder().encode(templates) {
+            userDefaults.set(encoded, forKey: Keys.workoutTemplates)
+        }
+        notifyCloudSync(recordType: "WorkoutTemplate", recordID: template.id.uuidString)
+    }
+
+    func loadWorkoutTemplates() -> [WorkoutTemplate] {
+        guard let data = userDefaults.data(forKey: Keys.workoutTemplates),
+              let templates = try? JSONDecoder().decode([WorkoutTemplate].self, from: data) else {
+            return []
+        }
+        return templates
+    }
+
+    func deleteWorkoutTemplate(_ template: WorkoutTemplate) {
+        var templates = loadWorkoutTemplates()
+        templates.removeAll { $0.id == template.id }
+        if let encoded = try? JSONEncoder().encode(templates) {
+            userDefaults.set(encoded, forKey: Keys.workoutTemplates)
+        }
     }
 
     // MARK: - Clear All Data

@@ -33,7 +33,7 @@ struct WorkoutDetailView: View {
                     HStack(spacing: 0) {
                         StatBlock(
                             value: workout.formattedDuration,
-                            label: "Duration",
+                            label: String(localized: "Duration"),
                             icon: "clock.fill"
                         )
 
@@ -42,7 +42,7 @@ struct WorkoutDetailView: View {
 
                         StatBlock(
                             value: "\(Int(workout.activeCalories))",
-                            label: "Calories",
+                            label: String(localized: "Calories"),
                             icon: "flame.fill"
                         )
 
@@ -52,7 +52,7 @@ struct WorkoutDetailView: View {
 
                             StatBlock(
                                 value: (distance / 1000).formatted1,
-                                label: "km",
+                                label: String(localized: "km"),
                                 icon: "map.fill"
                             )
                         }
@@ -64,14 +64,14 @@ struct WorkoutDetailView: View {
                     // Time Details
                     VStack(spacing: 16) {
                         HStack {
-                            Text("Time Details")
+                            Text(String(localized: "Time Details"))
                                 .font(.headline)
                             Spacer()
                         }
 
                         HStack {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("Start")
+                                Text(String(localized: "Start"))
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
 
@@ -87,7 +87,7 @@ struct WorkoutDetailView: View {
                             Spacer()
 
                             VStack(alignment: .trailing, spacing: 4) {
-                                Text("End")
+                                Text(String(localized: "End"))
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
 
@@ -104,7 +104,7 @@ struct WorkoutDetailView: View {
                     if let avgHR = workout.averageHeartRate {
                         VStack(spacing: 16) {
                             HStack {
-                                Text("Heart Rate")
+                                Text(String(localized: "Heart Rate"))
                                     .font(.headline)
                                 Spacer()
                             }
@@ -115,10 +115,10 @@ struct WorkoutDetailView: View {
                                     .foregroundStyle(.red)
 
                                 VStack(alignment: .leading) {
-                                    Text("\(Int(avgHR)) bpm")
+                                    Text(String(localized: "\(Int(avgHR)) bpm"))
                                         .font(.title2.bold())
 
-                                    Text("Average")
+                                    Text(String(localized: "Average"))
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                 }
@@ -134,7 +134,7 @@ struct WorkoutDetailView: View {
                     // Calories Breakdown
                     VStack(spacing: 16) {
                         HStack {
-                            Text("Energy")
+                            Text(String(localized: "Energy"))
                                 .font(.headline)
                             Spacer()
                         }
@@ -145,7 +145,7 @@ struct WorkoutDetailView: View {
                                     .font(.title.bold())
                                     .foregroundStyle(.orange)
 
-                                Text("Active kcal")
+                                Text(String(localized: "Active kcal"))
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
                             }
@@ -156,17 +156,17 @@ struct WorkoutDetailView: View {
                             VStack(alignment: .leading, spacing: 8) {
                                 EquivalentRow(
                                     icon: "cup.and.saucer.fill",
-                                    text: "\(Int(workout.activeCalories / 5)) coffees"
+                                    text: String(localized: "\(Int(workout.activeCalories / 5)) coffees")
                                 )
 
                                 EquivalentRow(
                                     icon: "🍌",
-                                    text: "\(Int(workout.activeCalories / 90)) bananas"
+                                    text: String(localized: "\(Int(workout.activeCalories / 90)) bananas")
                                 )
 
                                 EquivalentRow(
                                     icon: "figure.walk",
-                                    text: "\(Int(workout.activeCalories / 40)) min walking"
+                                    text: String(localized: "\(Int(workout.activeCalories / 40)) min walking")
                                 )
                             }
                         }
@@ -182,7 +182,7 @@ struct WorkoutDetailView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") {
+                    Button(String(localized: "Done")) {
                         dismiss()
                     }
                 }

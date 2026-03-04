@@ -53,22 +53,22 @@ class LocalLLMService: ObservableObject {
         scanForModels()
     }
 
-    // MARK: - Auto-Load Llama 1B
+    // MARK: - Auto-Load Model
 
-    /// Automatically finds and loads a Llama 1B model on app startup
-    func autoLoadLlama1BModel() async {
+    /// Automatically finds and loads a Qwen3 1.7B model on app startup
+    func autoLoadModel() async {
         // Don't reload if already loaded
         guard !isModelLoaded else { return }
 
         // Scan for models first
         scanForModels()
 
-        // Look for Llama 1B model (prioritize by name patterns)
-        let llama1BPatterns = ["llama-3.2-1b", "llama3.2-1b", "llama-1b", "1b"]
+        // Look for Qwen3 1.7B model first, then fall back to other models
+        let modelPatterns = ["qwen3-1.7b", "qwen3", "qwen", "gemma-3-1b", "gemma3-1b", "1b"]
 
         // Find best matching model
         var bestMatch: LocalModel?
-        for pattern in llama1BPatterns {
+        for pattern in modelPatterns {
             if let model = availableModels.first(where: {
                 $0.name.lowercased().contains(pattern) ||
                 $0.path.lowercased().contains(pattern)
@@ -78,11 +78,11 @@ class LocalLLMService: ObservableObject {
             }
         }
 
-        // If no Llama 1B found, try any available model (fallback)
+        // If no preferred model found, try any available model (fallback)
         let modelToLoad = bestMatch ?? availableModels.first
 
         guard let model = modelToLoad else {
-            error = "No GGUF model found. Please add a Llama model to the app."
+            error = "No GGUF model found. Please add a Qwen3 1.7B model to the app."
             return
         }
 
@@ -174,7 +174,16 @@ class LocalLLMService: ObservableObject {
     }
 
     private func formatModelName(_ name: String) -> String {
-        // Clean up common naming patterns
+        // Map known model filenames to clean display names
+        let lower = name.lowercased()
+        if lower.contains("qwen3-1.7b") || lower.contains("qwen3-1") {
+            return "Qwen3 1.7B"
+        }
+        if lower.contains("gemma-3-1b") || lower.contains("gemma3-1b") {
+            return "Gemma 3 1B"
+        }
+
+        // Generic cleanup for unknown models
         var cleanName = name
             .replacingOccurrences(of: "-", with: " ")
             .replacingOccurrences(of: "_", with: " ")
@@ -205,25 +214,25 @@ class LocalLLMService: ObservableObject {
             config = .lowMemory
         }
 
-        // Create new context
-        let context = LlamaContext(config: config)
-        llamaContext = context
-
-        // Observe loading progress
-        let task = Task { @MainActor in
-            for await _ in context.$loadingProgress.values {
-                self.loadingProgress = context.loadingProgress
-            }
+        // Unload previous model if any
+        if llamaContext != nil {
+            llamaContext = nil
         }
 
         do {
-            try await context.loadModel(from: model.path)
+            loadingProgress = 0.1
+            // Load model on a background thread to avoid blocking MainActor
+            let path = model.path
+            let ctx = try await Task.detached(priority: .userInitiated) {
+                try LlamaContext.create(from: path, config: config)
+            }.value
+            llamaContext = ctx
+            loadingProgress = 1.0
             loadedModelName = model.name
-            task.cancel()
         } catch {
             self.error = error.localizedDescription
             llamaContext = nil
-            task.cancel()
+            loadingProgress = 0
             throw error
         }
     }
@@ -249,21 +258,20 @@ class LocalLLMService: ObservableObject {
     }
 
     func unloadModel() {
-        llamaContext?.unloadModel()
         llamaContext = nil
         loadedModelName = nil
         conversationHistory = []
     }
 
     var isModelLoaded: Bool {
-        llamaContext?.isModelLoaded ?? false
+        llamaContext != nil
     }
 
     // MARK: - Inference
 
     /// Generate a response using native llama.cpp inference
-    func generate(prompt: String, systemPrompt: String) async throws -> String {
-        guard let context = llamaContext, context.isModelLoaded else {
+    func generate(prompt: String, systemPrompt: String, grammar: String? = nil, maxTokens: Int = 512) async throws -> String {
+        guard let context = llamaContext else {
             throw LocalLLMError.modelNotLoaded
         }
 
@@ -276,8 +284,8 @@ class LocalLLMService: ObservableObject {
         // Build full prompt with conversation history
         let fullPrompt = buildPrompt(systemPrompt: systemPrompt)
 
-        // Generate response
-        let response = try await context.generate(prompt: fullPrompt, maxTokens: 1024)
+        // Generate response (awaiting actor-isolated method)
+        let response = try await context.generate(prompt: fullPrompt, maxTokens: maxTokens, grammar: grammar)
 
         // Clean up response
         let cleanedResponse = cleanResponse(response)
@@ -290,9 +298,10 @@ class LocalLLMService: ObservableObject {
     func generateStreaming(
         prompt: String,
         systemPrompt: String,
-        onToken: @escaping (String) -> Void
+        grammar: String? = nil,
+        onToken: @escaping @Sendable (String) -> Void
     ) async throws -> String {
-        guard let context = llamaContext, context.isModelLoaded else {
+        guard let context = llamaContext else {
             throw LocalLLMError.modelNotLoaded
         }
 
@@ -305,7 +314,8 @@ class LocalLLMService: ObservableObject {
 
         let response = try await context.generateStreaming(
             prompt: fullPrompt,
-            maxTokens: 1024,
+            maxTokens: 512,
+            grammar: grammar,
             onToken: onToken
         )
 
@@ -315,24 +325,31 @@ class LocalLLMService: ObservableObject {
     }
 
     private func buildPrompt(systemPrompt: String) -> String {
+        // Qwen3 ChatML format — native system role support
         var prompt = ""
 
-        // Llama 3 chat format
-        prompt += "<|begin_of_text|>"
-        prompt += "<|start_header_id|>system<|end_header_id|>\n\n"
+        // System message
+        prompt += "<|im_start|>system\n"
         prompt += systemPrompt
-        prompt += "<|eot_id|>"
+        prompt += "<|im_end|>\n"
 
-        // Add conversation history (keep last 10 messages for context window)
-        let recentHistory = conversationHistory.suffix(10)
+        // Conversation history (last 4 messages)
+        let recentHistory = conversationHistory.suffix(4)
+
         for message in recentHistory {
-            prompt += "<|start_header_id|>\(message.role)<|end_header_id|>\n\n"
-            prompt += message.content
-            prompt += "<|eot_id|>"
+            if message.role == "user" {
+                prompt += "<|im_start|>user\n"
+                prompt += message.content
+                prompt += "<|im_end|>\n"
+            } else {
+                prompt += "<|im_start|>assistant\n"
+                prompt += message.content
+                prompt += "<|im_end|>\n"
+            }
         }
 
         // Start assistant response
-        prompt += "<|start_header_id|>assistant<|end_header_id|>\n\n"
+        prompt += "<|im_start|>assistant\n"
 
         return prompt
     }
@@ -340,10 +357,16 @@ class LocalLLMService: ObservableObject {
     private func cleanResponse(_ response: String) -> String {
         var cleaned = response
 
-        // Remove any trailing special tokens
-        let tokensToRemove = ["<|eot_id|>", "<|end_of_text|>", "<|start_header_id|>"]
+        // Remove Qwen3 ChatML tokens
+        let tokensToRemove = ["<|im_end|>", "<|im_start|>", "<|endoftext|>"]
         for token in tokensToRemove {
             cleaned = cleaned.replacingOccurrences(of: token, with: "")
+        }
+
+        // Remove thinking blocks if present (Qwen3 thinking mode)
+        if let _ = cleaned.range(of: "<think>"),
+           let thinkEnd = cleaned.range(of: "</think>") {
+            cleaned = String(cleaned[thinkEnd.upperBound...])
         }
 
         return cleaned.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -355,12 +378,12 @@ class LocalLLMService: ObservableObject {
 
     // MARK: - Model Info
 
-    var modelInfo: String? {
-        llamaContext?.modelInfo
+    func getModelInfo() async -> String? {
+        await llamaContext?.modelInfo
     }
 
-    var contextLength: Int {
-        llamaContext?.contextLength ?? 0
+    func getContextLength() async -> Int {
+        await llamaContext?.contextLength ?? 0
     }
 }
 
@@ -375,43 +398,14 @@ enum LocalLLMError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .modelNotFound:
-            return "Model file not found"
+            return String(localized: "Model file not found")
         case .modelNotLoaded:
-            return "No model is loaded. Please select a model in settings."
+            return String(localized: "No model is loaded. Please select a model in settings.")
         case .loadError(let msg):
-            return "Failed to load model: \(msg)"
+            return String(localized: "Failed to load model: \(msg)")
         case .inferenceError(let msg):
-            return "Inference failed: \(msg)"
+            return String(localized: "Inference failed: \(msg)")
         }
-    }
-}
-
-// MARK: - Fitness Coach System Prompt
-
-extension LocalLLMService {
-    static func fitnessCoachSystemPrompt(userGoal: String, weight: Double, recentWorkouts: String) -> String {
-        """
-        You are an elite fitness coach and sports nutritionist. You provide expert advice on:
-
-        - Strength training, hypertrophy, and exercise programming
-        - Proper form and technique for all major lifts
-        - Sports nutrition: macros, meal timing, supplements
-        - Recovery, sleep optimization, and injury prevention
-
-        USER CONTEXT:
-        - Goal: \(userGoal)
-        - Weight: \(String(format: "%.1f", weight)) kg
-        - Recent Training: \(recentWorkouts.isEmpty ? "No recent data" : recentWorkouts)
-
-        GUIDELINES:
-        1. Be conversational but informative
-        2. Give specific, actionable advice (sets, reps, weights when relevant)
-        3. Use scientific evidence but explain it simply
-        4. Consider the user's goal in all responses
-        5. For exercises, include form cues
-        6. For nutrition, give practical food examples
-        7. Keep responses concise but thorough
-        """
     }
 }
 

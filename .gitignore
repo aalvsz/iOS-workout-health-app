@@ -49,6 +49,9 @@ playground.xcworkspace
 # Models (large files - download separately)
 *.gguf
 
+# llama.cpp XCFramework (161 MB - download separately)
+llama.xcframework/
+
 # Environment
 .env
 .env.local

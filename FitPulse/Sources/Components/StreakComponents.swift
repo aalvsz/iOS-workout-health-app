@@ -74,7 +74,7 @@ struct StreakCard: View {
                     .foregroundStyle(iconColor)
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(streak.type.rawValue)
+                    Text(streak.type.displayName)
                         .font(.subheadline.bold())
 
                     Text(streak.type.description)
@@ -95,7 +95,7 @@ struct StreakCard: View {
                     }
 
                     if streak.isAtRisk {
-                        Text("At risk!")
+                        Text(String(localized: "At risk!"))
                             .font(.caption)
                             .foregroundStyle(.orange)
                     }
@@ -120,7 +120,7 @@ struct StreakCard: View {
                 .frame(height: 6)
 
                 HStack {
-                    Text("Next: \(nextMilestone) days")
+                    Text(String(localized: "Next: \(nextMilestone) days"))
                         .font(.caption2)
                         .foregroundStyle(.secondary)
 
@@ -141,7 +141,7 @@ struct StreakCard: View {
                         .font(.caption)
                         .foregroundStyle(.yellow)
 
-                    Text("Personal best: \(streak.longestCount) days")
+                    Text(String(localized: "Personal best: \(streak.longestCount) days"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -180,7 +180,7 @@ struct StreakSummaryRow: View {
                     HStack(spacing: 4) {
                         Image(systemName: "flame")
                             .foregroundStyle(.gray)
-                        Text("Start a streak!")
+                        Text(String(localized: "Start a streak!"))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -193,7 +193,7 @@ struct StreakSummaryRow: View {
                     HStack(spacing: 4) {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .foregroundStyle(.orange)
-                        Text("At risk")
+                        Text(String(localized: "At risk"))
                             .font(.caption)
                             .foregroundStyle(.orange)
                     }
@@ -235,11 +235,11 @@ struct StreakDetailSheet: View {
                 }
                 .padding()
             }
-            .navigationTitle("Your Streaks")
+            .navigationTitle(String(localized: "Your Streaks"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") {
+                    Button(String(localized: "Done")) {
                         dismiss()
                     }
                 }
@@ -280,7 +280,7 @@ struct StreakCelebrationView: View {
                     .scaleEffect(scale)
 
                 VStack(spacing: 8) {
-                    Text("\(streak.currentCount) Day Streak!")
+                    Text(String(localized: "\(streak.currentCount) Day Streak!"))
                         .font(.title.bold())
                         .foregroundStyle(.white)
 
@@ -288,13 +288,13 @@ struct StreakCelebrationView: View {
                         .font(.headline)
                         .foregroundStyle(.orange)
 
-                    Text("Keep up the momentum!")
+                    Text(String(localized: "Keep up the momentum!"))
                         .font(.subheadline)
                         .foregroundStyle(.white.opacity(0.8))
                 }
 
                 Button(action: onDismiss) {
-                    Text("Continue")
+                    Text(String(localized: "Continue"))
                         .font(.headline)
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)

@@ -21,34 +21,34 @@ struct DashboardView: View {
                     ], spacing: 16) {
                         if let today = viewModel.todaySummary {
                             MetricCard(
-                                title: "Steps",
+                                title: String(localized: "Steps"),
                                 value: today.steps.formattedSteps,
-                                subtitle: "Goal: \(viewModel.profile.dailyStepsGoal.formattedSteps)",
+                                subtitle: String(localized: "Goal: \(viewModel.profile.dailyStepsGoal.formattedSteps)"),
                                 icon: "figure.walk",
                                 iconColor: .green,
                                 trend: nil
                             )
 
                             MetricCard(
-                                title: "Active Calories",
+                                title: String(localized: "Active Calories"),
                                 value: "\(Int(today.activeCalories))",
-                                subtitle: "kcal burned",
+                                subtitle: String(localized: "kcal burned"),
                                 icon: "flame.fill",
                                 iconColor: .orange
                             )
 
                             MetricCard(
-                                title: "Sleep",
+                                title: String(localized: "Sleep"),
                                 value: today.sleepHours.formattedHours,
-                                subtitle: "Goal: \(viewModel.profile.sleepGoalHours.formatted0)h",
+                                subtitle: String(localized: "Goal: \(viewModel.profile.sleepGoalHours.formatted0)h"),
                                 icon: "bed.double.fill",
                                 iconColor: .indigo
                             )
 
                             MetricCard(
-                                title: "Workouts",
+                                title: String(localized: "Workouts"),
                                 value: "\(viewModel.weeklyWorkoutCount)/\(viewModel.profile.weeklyWorkoutGoal)",
-                                subtitle: "This week",
+                                subtitle: String(localized: "This week"),
                                 icon: "figure.run",
                                 iconColor: .blue
                             )
@@ -83,7 +83,7 @@ struct DashboardView: View {
                 }
                 .padding()
             }
-            .navigationTitle("FitPulse")
+            .navigationTitle(String(localized: "FitPulse"))
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: { showingWeightInput = true }) {
@@ -127,7 +127,7 @@ struct RecoveryHeroCard: View {
         VStack(spacing: 16) {
             HStack {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Today's Recovery")
+                    Text(String(localized: "Today's Recovery"))
                         .font(.headline)
                         .foregroundStyle(.secondary)
 
@@ -135,7 +135,7 @@ struct RecoveryHeroCard: View {
                         Text("\(Int(analysis.score))")
                             .font(.system(size: 48, weight: .bold, design: .rounded))
 
-                        Text("/100")
+                        Text(String(localized: "/100"))
                             .font(.title3)
                             .foregroundStyle(.secondary)
                     }
@@ -163,7 +163,7 @@ struct RecoveryHeroCard: View {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundStyle(.orange)
 
-                    Text("Unusual: \(reason)")
+                    Text(String(localized: "Unusual: \(reason)"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
@@ -200,7 +200,7 @@ struct ActivitySummaryCard: View {
     var body: some View {
         VStack(spacing: 16) {
             HStack {
-                Text("Today's Activity")
+                Text(String(localized: "Today's Activity"))
                     .font(.headline)
 
                 Spacer()
@@ -221,21 +221,21 @@ struct ActivitySummaryCard: View {
                 VStack(alignment: .leading, spacing: 12) {
                     ActivityLegendRow(
                         color: .caloriesRing,
-                        label: "Move",
-                        value: "\(Int(summary.activeCalories)) kcal",
+                        label: String(localized: "Move"),
+                        value: String(localized: "\(Int(summary.activeCalories)) kcal"),
                         progress: caloriesProgress
                     )
 
                     ActivityLegendRow(
                         color: .exerciseRing,
-                        label: "Exercise",
-                        value: "\(Int(summary.workoutMinutes)) min",
+                        label: String(localized: "Exercise"),
+                        value: String(localized: "\(Int(summary.workoutMinutes)) min"),
                         progress: Double(summary.workoutMinutes) / 30
                     )
 
                     ActivityLegendRow(
                         color: .standRing,
-                        label: "Steps",
+                        label: String(localized: "Steps"),
                         value: summary.steps.formattedSteps,
                         progress: stepsProgress
                     )
@@ -285,13 +285,13 @@ struct NutritionQuickCard: View {
     var body: some View {
         VStack(spacing: 12) {
             HStack {
-                Text("Nutrition Targets")
+                Text(String(localized: "Nutrition Targets"))
                     .font(.headline)
 
                 Spacer()
 
                 NavigationLink(destination: NutritionView()) {
-                    Text("Details")
+                    Text(String(localized: "Details"))
                         .font(.caption)
                         .foregroundStyle(.blue)
                 }
@@ -302,7 +302,7 @@ struct NutritionQuickCard: View {
                     Text("\(Int(targets.targetCalories))")
                         .font(.title2.bold())
 
-                    Text("Target kcal")
+                    Text(String(localized: "Target kcal"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -316,7 +316,7 @@ struct NutritionQuickCard: View {
                         .font(.title2.bold())
                         .foregroundStyle(Color.proteinColor)
 
-                    Text("Protein")
+                    Text(String(localized: "Protein"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -330,7 +330,7 @@ struct NutritionQuickCard: View {
                         .font(.title2.bold())
                         .foregroundStyle(Color.carbsColor)
 
-                    Text("Carbs")
+                    Text(String(localized: "Carbs"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -344,7 +344,7 @@ struct NutritionQuickCard: View {
                         .font(.title2.bold())
                         .foregroundStyle(Color.fatColor)
 
-                    Text("Fat")
+                    Text(String(localized: "Fat"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -364,13 +364,13 @@ struct RecentWorkoutsCard: View {
     var body: some View {
         VStack(spacing: 12) {
             HStack {
-                Text("Recent Workouts")
+                Text(String(localized: "Recent Workouts"))
                     .font(.headline)
 
                 Spacer()
 
                 NavigationLink(destination: WorkoutsView()) {
-                    Text("See All")
+                    Text(String(localized: "See All"))
                         .font(.caption)
                         .foregroundStyle(.blue)
                 }
@@ -396,7 +396,7 @@ struct InsightsCard: View {
     var body: some View {
         VStack(spacing: 12) {
             HStack {
-                Text("Insights")
+                Text(String(localized: "Insights"))
                     .font(.headline)
 
                 Spacer()
@@ -470,7 +470,7 @@ struct WeightInputSheet: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 24) {
-                Text("Log Weight")
+                Text(String(localized: "Log Weight"))
                     .font(.title2.bold())
 
                 Text("\(weight, specifier: "%.1f") kg")
@@ -510,7 +510,7 @@ struct WeightInputSheet: View {
                     onSave(weight)
                     dismiss()
                 }) {
-                    Text("Save")
+                    Text(String(localized: "Save"))
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                         .padding()
@@ -523,7 +523,7 @@ struct WeightInputSheet: View {
             .padding()
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Cancel") {
+                    Button(String(localized: "Cancel")) {
                         dismiss()
                     }
                 }

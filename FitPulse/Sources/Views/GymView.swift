@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct GymView: View {
+    var autoShowWorkoutPlanGenerator: Bool = false
+
     @StateObject private var viewModel = GymViewModel()
     @State private var showingWorkoutPlanGenerator = false
     @State private var selectedWorkout: GymWorkout?
@@ -11,6 +13,9 @@ struct GymView: View {
                 VStack(spacing: 20) {
                     // Quick Stats
                     WeeklyGymStats(workouts: viewModel.thisWeekWorkouts)
+
+                    // Quick Links
+                    GymToolsSection()
 
                     // Next Workout Suggestion
                     if let suggestion = viewModel.nextWorkoutSuggestion {
@@ -40,7 +45,7 @@ struct GymView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Training")
+            .navigationTitle(String(localized: "Training"))
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: { showingWorkoutPlanGenerator = true }) {
@@ -53,6 +58,11 @@ struct GymView: View {
             }
             .task {
                 await viewModel.loadData()
+            }
+            .onAppear {
+                if autoShowWorkoutPlanGenerator {
+                    showingWorkoutPlanGenerator = true
+                }
             }
             .sheet(isPresented: $showingWorkoutPlanGenerator) {
                 WorkoutPlanGeneratorView(viewModel: viewModel)
@@ -79,20 +89,20 @@ struct WeeklyGymStats: View {
     var body: some View {
         VStack(spacing: 16) {
             HStack {
-                Text("This Week")
+                Text(String(localized: "This Week"))
                     .font(.headline)
                 Spacer()
-                Text("\(workouts.count) sessions")
+                Text(String(localized: "\(workouts.count) sessions"))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
 
             HStack(spacing: 0) {
-                StatBox(value: "\(workouts.count)", label: "Workouts", icon: "dumbbell.fill", color: .blue)
+                StatBox(value: "\(workouts.count)", label: String(localized: "Workouts"), icon: "dumbbell.fill", color: .blue)
                 Divider().frame(height: 40)
-                StatBox(value: "\(Int(totalDuration))", label: "Minutes", icon: "clock.fill", color: .green)
+                StatBox(value: "\(Int(totalDuration))", label: String(localized: "Minutes"), icon: "clock.fill", color: .green)
                 Divider().frame(height: 40)
-                StatBox(value: "\(Int(totalCalories))", label: "Calories", icon: "flame.fill", color: .orange)
+                StatBox(value: "\(Int(totalCalories))", label: String(localized: "Calories"), icon: "flame.fill", color: .orange)
             }
 
             // Week calendar
@@ -132,8 +142,8 @@ struct WeekCalendarView: View {
         let calendar = Calendar.current
         let startOfWeek = Date().startOfWeek
 
-        return (0..<7).map { offset in
-            let date = calendar.date(byAdding: .day, value: offset, to: startOfWeek)!
+        return (0..<7).compactMap { offset in
+            guard let date = calendar.date(byAdding: .day, value: offset, to: startOfWeek) else { return nil }
             let hasWorkout = workouts.contains { calendar.isDate($0.date, inSameDayAs: date) }
             return (date.shortDayOfWeek, date, hasWorkout)
         }
@@ -188,7 +198,7 @@ struct NextWorkoutCard: View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Suggested Workout")
+                    Text(String(localized: "Suggested Workout"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
@@ -217,14 +227,14 @@ struct NextWorkoutCard: View {
                         Text(exercise.name)
                             .font(.subheadline)
                         Spacer()
-                        Text("\(exercise.sets) x \(exercise.reps)")
+                        Text(String(localized: "\(exercise.sets) x \(exercise.reps)"))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
                 }
 
                 if suggestion.exercises.count > 4 {
-                    Text("+ \(suggestion.exercises.count - 4) more exercises")
+                    Text(String(localized: "+ \(suggestion.exercises.count - 4) more exercises"))
                         .font(.caption)
                         .foregroundStyle(.tertiary)
                 }
@@ -233,7 +243,7 @@ struct NextWorkoutCard: View {
             Button(action: onStart) {
                 HStack {
                     Image(systemName: "play.fill")
-                    Text("Start Workout")
+                    Text(String(localized: "Start Workout"))
                 }
                 .font(.headline)
                 .foregroundStyle(.white)
@@ -266,10 +276,10 @@ struct GenerateWorkoutCard: View {
                     .font(.system(size: 40))
                     .foregroundStyle(.blue)
 
-                Text("Generate Workout Plan")
+                Text(String(localized: "Generate Workout Plan"))
                     .font(.headline)
 
-                Text("Get a personalized training plan based on your goals and history")
+                Text(String(localized: "Get a personalized training plan based on your goals and history"))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
@@ -290,7 +300,7 @@ struct CurrentPlanCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Current Plan")
+                Text(String(localized: "Current Plan"))
                     .font(.headline)
                 Spacer()
                 Text(plan.name)
@@ -340,7 +350,7 @@ struct PlanDayCard: View {
             }
 
             if day.exercises.count > 3 {
-                Text("+\(day.exercises.count - 3) more")
+                Text(String(localized: "+\(day.exercises.count - 3) more"))
                     .font(.caption2)
                     .foregroundStyle(.tertiary)
             }
@@ -360,10 +370,10 @@ struct RecentGymWorkoutsSection: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Recent Workouts")
+                Text(String(localized: "Recent Workouts"))
                     .font(.headline)
                 Spacer()
-                Text("\(workouts.count) total")
+                Text(String(localized: "\(workouts.count) total"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -402,7 +412,7 @@ struct GymWorkoutRow: View {
                     HStack(spacing: 8) {
                         Text(workout.formattedDuration)
                         Text("•")
-                        Text("\(Int(workout.calories)) kcal")
+                        Text(String(localized: "\(Int(workout.calories)) kcal"))
                     }
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -416,7 +426,7 @@ struct GymWorkoutRow: View {
                         .foregroundStyle(.secondary)
 
                     if !workout.exercises.isEmpty {
-                        Text("\(workout.exercises.count) exercises")
+                        Text(String(localized: "\(workout.exercises.count) exercises"))
                             .font(.caption2)
                             .foregroundStyle(.tertiary)
                     }
@@ -437,7 +447,7 @@ struct TrainingInsightsCard: View {
             HStack {
                 Image(systemName: "lightbulb.fill")
                     .foregroundStyle(.yellow)
-                Text("Insights")
+                Text(String(localized: "Insights"))
                     .font(.headline)
             }
 
@@ -455,6 +465,44 @@ struct TrainingInsightsCard: View {
         .padding()
         .background(.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 20))
+    }
+}
+
+// MARK: - Gym Tools Section
+struct GymToolsSection: View {
+    var body: some View {
+        HStack(spacing: 12) {
+            NavigationLink(destination: ExerciseLibraryView()) {
+                GymToolCard(title: String(localized: "Exercise Library"), icon: "books.vertical", color: .indigo)
+            }
+            .buttonStyle(.plain)
+
+            NavigationLink(destination: WorkoutTemplatesView()) {
+                GymToolCard(title: String(localized: "My Templates"), icon: "square.and.pencil", color: .teal)
+            }
+            .buttonStyle(.plain)
+        }
+    }
+}
+
+struct GymToolCard: View {
+    let title: String
+    let icon: String
+    let color: Color
+
+    var body: some View {
+        VStack(spacing: 8) {
+            Image(systemName: icon)
+                .font(.title2)
+                .foregroundStyle(color)
+            Text(title)
+                .font(.caption.bold())
+                .foregroundStyle(.primary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(color.opacity(0.1))
+        .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }
 

@@ -12,6 +12,8 @@ class HomeViewModel: ObservableObject {
     @Published var hydrationGoal: Int = 2500
     @Published var todayWorkouts: [Workout] = []
     @Published var topInsight: Insight?
+    @Published var currentWorkoutPlan: WorkoutPlan?
+    @Published var currentMealPlan: DayMealPlan?
     @Published var isLoading = false
 
     // MARK: - Dependencies
@@ -30,17 +32,30 @@ class HomeViewModel: ObservableObject {
 
     var greeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
-        let name = profile.name.isEmpty ? "" : ", \(profile.name.split(separator: " ").first ?? "")"
+        let firstName = profile.name.split(separator: " ").first.map(String.init) ?? ""
 
-        switch hour {
-        case 5..<12:
-            return "Good morning\(name)"
-        case 12..<17:
-            return "Good afternoon\(name)"
-        case 17..<21:
-            return "Good evening\(name)"
-        default:
-            return "Good night\(name)"
+        if firstName.isEmpty {
+            switch hour {
+            case 5..<12:
+                return String(localized: "Good morning")
+            case 12..<17:
+                return String(localized: "Good afternoon")
+            case 17..<21:
+                return String(localized: "Good evening")
+            default:
+                return String(localized: "Good night")
+            }
+        } else {
+            switch hour {
+            case 5..<12:
+                return String(localized: "Good morning, \(firstName)")
+            case 12..<17:
+                return String(localized: "Good afternoon, \(firstName)")
+            case 17..<21:
+                return String(localized: "Good evening, \(firstName)")
+            default:
+                return String(localized: "Good night, \(firstName)")
+            }
         }
     }
 
@@ -62,8 +77,8 @@ class HomeViewModel: ObservableObject {
         // Initialize with defaults
         self.todaysPriority = TodaysPriority(
             type: .nutrition,
-            title: "Loading...",
-            subtitle: "Getting your data",
+            title: String(localized: "Loading..."),
+            subtitle: String(localized: "Getting your data"),
             icon: "circle.dotted",
             color: .gray,
             actionText: nil,
@@ -125,7 +140,7 @@ class HomeViewModel: ObservableObject {
             // Fetch health data
             let summaries = try await healthService.fetchDailySummaries(days: 7)
             let todaySummary = summaries.first { Calendar.current.isDateInToday($0.date) }
-            let workouts = try await healthService.fetchRecentWorkouts(limit: 10)
+            let workouts = try await healthService.fetchRecentWorkouts(limit: 50)
 
             // Update calories burned
             caloriesBurned = Int(todaySummary?.activeCalories ?? 0)
@@ -185,6 +200,9 @@ class HomeViewModel: ObservableObject {
                 lastWorkoutDate: workouts.first?.date
             )
 
+            // Load active plans
+            loadActivePlans()
+
             // Generate top insight
             generateTopInsight(
                 recoveryAnalysis: recoveryAnalysis,
@@ -232,6 +250,19 @@ class HomeViewModel: ObservableObject {
     }
 
     // MARK: - Private Methods
+    private func loadActivePlans() {
+        // Load workout plan from UserDefaults (same as GymViewModel)
+        if let data = UserDefaults.standard.data(forKey: "currentWorkoutPlan"),
+           let plan = try? JSONDecoder().decode(WorkoutPlan.self, from: data) {
+            currentWorkoutPlan = plan
+        } else {
+            currentWorkoutPlan = nil
+        }
+
+        // Load today's meal plan
+        currentMealPlan = persistence.loadMealPlan(for: Date())
+    }
+
     private func generateTopInsight(
         recoveryAnalysis: RecoveryAnalysis?,
         weeklyWorkouts: Int,
@@ -240,22 +271,22 @@ class HomeViewModel: ObservableObject {
         // Pick the most relevant insight
         if let recovery = recoveryAnalysis, recovery.score < 50 {
             topInsight = Insight(
-                title: "Recovery Alert",
+                title: String(localized: "Recovery Alert"),
                 description: recovery.status.recommendation,
                 type: .recovery,
                 priority: .high
             )
         } else if weeklyWorkouts >= profile.weeklyWorkoutGoal {
             topInsight = Insight(
-                title: "Weekly Goal Achieved!",
-                description: "You've hit your workout goal. Great consistency!",
+                title: String(localized: "Weekly Goal Achieved!"),
+                description: String(localized: "You've hit your workout goal. Great consistency!"),
                 type: .workout,
                 priority: .medium
             )
         } else if nutritionAdherence > 0.9 {
             topInsight = Insight(
-                title: "Nutrition On Point",
-                description: "You're hitting your calorie targets. Keep it up!",
+                title: String(localized: "Nutrition On Point"),
+                description: String(localized: "You're hitting your calorie targets. Keep it up!"),
                 type: .nutrition,
                 priority: .low
             )

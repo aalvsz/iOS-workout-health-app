@@ -6,7 +6,7 @@ iOS fitness tracking app built with SwiftUI and HealthKit integration. Features 
 ## Build Commands
 - Build: `xcodebuild -project FitPulse.xcodeproj -scheme FitPulse -sdk iphonesimulator -configuration Debug build`
 - Clean: `xcodebuild -project FitPulse.xcodeproj -scheme FitPulse clean`
-- Run: `xcrun simctl boot "iPhone 16 Pro" && xcrun simctl install booted build/Debug-iphonesimulator/FitPulse.app`
+- Run: `xcrun simctl boot "iPhone 17 Pro" && xcrun simctl install booted "$(xcodebuild -project FitPulse.xcodeproj -scheme FitPulse -sdk iphonesimulator -configuration Debug -showBuildSettings 2>/dev/null | grep ' BUILT_PRODUCTS_DIR' | xargs | cut -d= -f2 | xargs)/FitPulse.app" && xcrun simctl launch booted com.anderalvarez.fitpulse`
 
 ## Architecture
 - MVVM pattern: Views -> ViewModels -> Services -> Models

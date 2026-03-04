@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject var profile: UserProfile
+    @EnvironmentObject var healthService: HealthKitService
     @StateObject private var viewModel = ProfileViewModel()
     @State private var showingWeightInput = false
 
@@ -23,10 +24,10 @@ struct ProfileView: View {
                         }
 
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(profile.name.isEmpty ? "Your Name" : profile.name)
+                            Text(profile.name.isEmpty ? String(localized: "Your Name") : profile.name)
                                 .font(.title2.bold())
 
-                            Text(profile.fitnessGoal.rawValue)
+                            Text(profile.fitnessGoal.displayName)
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
@@ -34,37 +35,48 @@ struct ProfileView: View {
                     .padding(.vertical, 8)
                 }
 
+                // Account
+                AuthSectionView()
+
                 // Body Stats
-                Section("Body Stats") {
+                Section(String(localized: "Body Stats")) {
                     HStack {
-                        Text("Weight")
+                        Text(String(localized: "Weight"))
                         Spacer()
-                        Text("\(profile.weightKg, specifier: "%.1f") kg")
+                        Text(String(localized: "\(profile.weightKg, specifier: "%.1f") kg"))
                             .foregroundStyle(.secondary)
                     }
 
                     HStack {
-                        Text("Height")
+                        Text(String(localized: "Height"))
                         Spacer()
-                        Text("\(Int(profile.heightCm)) cm")
+                        Text(String(localized: "\(Int(profile.heightCm)) cm"))
                             .foregroundStyle(.secondary)
                     }
 
                     HStack {
-                        Text("Age")
+                        Text(String(localized: "Age"))
                         Spacer()
-                        Text("\(profile.age) years")
+                        Text(String(localized: "\(profile.age) years"))
                             .foregroundStyle(.secondary)
                     }
 
-                    Button("Log Weight") {
+                    Button(String(localized: "Log Weight")) {
                         showingWeightInput = true
+                    }
+
+                    NavigationLink(destination: WeightTrendsView()) {
+                        HStack {
+                            Image(systemName: "chart.line.uptrend.xyaxis")
+                                .foregroundStyle(.blue)
+                            Text(String(localized: "Weight Trends"))
+                        }
                     }
                 }
 
                 // Goals
-                Section("Fitness Goal") {
-                    Picker("Goal", selection: Binding(
+                Section(String(localized: "Fitness Goal")) {
+                    Picker(String(localized: "Goal"), selection: Binding(
                         get: { profile.fitnessGoal },
                         set: { newValue in
                             profile.fitnessGoal = newValue
@@ -72,11 +84,11 @@ struct ProfileView: View {
                         }
                     )) {
                         ForEach(UserProfile.FitnessGoal.allCases, id: \.self) { goal in
-                            Text(goal.rawValue).tag(goal)
+                            Text(goal.displayName).tag(goal)
                         }
                     }
 
-                    Picker("Activity Level", selection: Binding(
+                    Picker(String(localized: "Activity Level"), selection: Binding(
                         get: { profile.activityLevel },
                         set: { newValue in
                             profile.activityLevel = newValue
@@ -84,22 +96,22 @@ struct ProfileView: View {
                         }
                     )) {
                         ForEach(UserProfile.ActivityLevel.allCases, id: \.self) { level in
-                            Text(level.rawValue).tag(level)
+                            Text(level.displayName).tag(level)
                         }
                     }
                 }
 
                 // Nutrition Targets
-                Section("Nutrition Targets") {
-                    LabeledContent("Daily Calories", value: "\(Int(viewModel.targetCalories)) kcal")
-                    LabeledContent("Protein", value: "\(Int(viewModel.proteinTarget))g")
-                    LabeledContent("Carbs", value: "\(Int(viewModel.carbTarget))g")
-                    LabeledContent("Fat", value: "\(Int(viewModel.fatTarget))g")
+                Section(String(localized: "Nutrition Targets")) {
+                    LabeledContent(String(localized: "Daily Calories"), value: String(localized: "\(Int(viewModel.targetCalories)) kcal"))
+                    LabeledContent(String(localized: "Protein"), value: String(localized: "\(Int(viewModel.proteinTarget))g"))
+                    LabeledContent(String(localized: "Carbs"), value: String(localized: "\(Int(viewModel.carbTarget))g"))
+                    LabeledContent(String(localized: "Fat"), value: String(localized: "\(Int(viewModel.fatTarget))g"))
                 }
 
                 // Settings
-                Section("Preferences") {
-                    Stepper("Weekly Workouts: \(profile.weeklyWorkoutGoal)", value: Binding(
+                Section(String(localized: "Preferences")) {
+                    Stepper(String(localized: "Weekly Workouts: \(profile.weeklyWorkoutGoal)"), value: Binding(
                         get: { profile.weeklyWorkoutGoal },
                         set: { newValue in
                             profile.weeklyWorkoutGoal = newValue
@@ -107,19 +119,42 @@ struct ProfileView: View {
                         }
                     ), in: 1...7)
 
-                    NavigationLink("Nutrition Settings") {
+                    NavigationLink(String(localized: "Nutrition Settings")) {
                         NutritionSettingsView()
                     }
                 }
 
+                // Health Data Sync
+                Section(String(localized: "Health Data")) {
+                    if let lastSync = healthService.lastSyncDate {
+                        HStack {
+                            Text(String(localized: "Last Synced"))
+                            Spacer()
+                            Text(lastSync, style: .relative)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+
+                    Button {
+                        Task { await healthService.syncAllHealthData() }
+                    } label: {
+                        HStack {
+                            Image(systemName: "heart.fill")
+                                .foregroundStyle(.red)
+                            Text(healthService.isSyncing ? String(localized: "Syncing...") : String(localized: "Sync with Apple Health"))
+                        }
+                    }
+                    .disabled(healthService.isSyncing)
+                }
+
                 // Data
-                Section("Data") {
-                    Button("Reset Profile", role: .destructive) {
+                Section(String(localized: "Data")) {
+                    Button(String(localized: "Reset Profile"), role: .destructive) {
                         viewModel.showingResetConfirmation = true
                     }
                 }
             }
-            .navigationTitle("Profile")
+            .navigationTitle(String(localized: "Profile"))
             .sheet(isPresented: $showingWeightInput) {
                 WeightInputSheet(
                     currentWeight: profile.weightKg,
@@ -129,13 +164,13 @@ struct ProfileView: View {
                     }
                 )
             }
-            .alert("Reset Profile?", isPresented: $viewModel.showingResetConfirmation) {
-                Button("Cancel", role: .cancel) {}
-                Button("Reset", role: .destructive) {
+            .alert(String(localized: "Reset Profile?"), isPresented: $viewModel.showingResetConfirmation) {
+                Button(String(localized: "Cancel"), role: .cancel) {}
+                Button(String(localized: "Reset"), role: .destructive) {
                     viewModel.resetProfile()
                 }
             } message: {
-                Text("This will reset all your settings to defaults.")
+                Text(String(localized: "This will reset all your settings to defaults."))
             }
             .onAppear {
                 viewModel.updateTargets(for: profile)
@@ -182,12 +217,12 @@ struct NutritionSettingsView: View {
 
     var body: some View {
         Form {
-            Section("Calorie Deficit") {
+            Section(String(localized: "Calorie Deficit")) {
                 VStack(alignment: .leading) {
                     HStack {
-                        Text("Deficit")
+                        Text(String(localized: "Deficit"))
                         Spacer()
-                        Text("\(Int(profile.deficitPercentage * 100))%")
+                        Text(String(localized: "\(Int(profile.deficitPercentage * 100))%"))
                             .foregroundStyle(.secondary)
                     }
                     Slider(value: Binding(
@@ -199,17 +234,17 @@ struct NutritionSettingsView: View {
                     ), in: 0...0.30, step: 0.05)
                 }
 
-                Text("Higher deficit = faster weight loss, but harder to maintain")
+                Text(String(localized: "Higher deficit = faster weight loss, but harder to maintain"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
 
-            Section("Macros") {
+            Section(String(localized: "Macros")) {
                 VStack(alignment: .leading) {
                     HStack {
-                        Text("Protein")
+                        Text(String(localized: "Protein"))
                         Spacer()
-                        Text("\(profile.proteinPerKg, specifier: "%.1f") g/kg")
+                        Text(String(localized: "\(profile.proteinPerKg, specifier: "%.1f") g/kg"))
                             .foregroundStyle(.secondary)
                     }
                     Slider(value: Binding(
@@ -223,9 +258,9 @@ struct NutritionSettingsView: View {
 
                 VStack(alignment: .leading) {
                     HStack {
-                        Text("Fat")
+                        Text(String(localized: "Fat"))
                         Spacer()
-                        Text("\(profile.fatPerKg, specifier: "%.1f") g/kg")
+                        Text(String(localized: "\(profile.fatPerKg, specifier: "%.1f") g/kg"))
                             .foregroundStyle(.secondary)
                     }
                     Slider(value: Binding(
@@ -237,16 +272,17 @@ struct NutritionSettingsView: View {
                     ), in: 0.5...1.2, step: 0.1)
                 }
 
-                Text("Recommended protein: 1.6-2.2 g/kg for muscle building")
+                Text(String(localized: "Recommended protein: 1.6-2.2 g/kg for muscle building"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
         }
-        .navigationTitle("Nutrition")
+        .navigationTitle(String(localized: "Nutrition"))
     }
 }
 
 #Preview {
     ProfileView()
         .environmentObject(UserProfile())
+        .environmentObject(HealthKitService.shared)
 }

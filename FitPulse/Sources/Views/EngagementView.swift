@@ -4,13 +4,13 @@ struct EngagementView: View {
     @StateObject private var viewModel = EngagementViewModel()
     @State private var selectedSegment = 0
 
-    let segments = ["Streaks", "Achievements", "Challenges", "Goals"]
+    let segments = [String(localized: "Streaks"), String(localized: "Achievements"), String(localized: "Challenges"), String(localized: "Goals")]
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
                 // Segment picker
-                Picker("Section", selection: $selectedSegment) {
+                Picker(String(localized: "Section"), selection: $selectedSegment) {
                     ForEach(0..<segments.count, id: \.self) { index in
                         Text(segments[index]).tag(index)
                     }
@@ -37,7 +37,7 @@ struct EngagementView: View {
                     await viewModel.refreshData()
                 }
             }
-            .navigationTitle("Progress")
+            .navigationTitle(String(localized: "Progress"))
             .task {
                 await viewModel.loadData()
             }
@@ -82,10 +82,10 @@ struct EngagementView: View {
             VStack(spacing: 12) {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Your Streaks")
+                        Text(String(localized: "Your Streaks"))
                             .font(.headline)
 
-                        Text("\(viewModel.streakSummary.totalActiveStreaks) active")
+                        Text(String(localized: "\(viewModel.streakSummary.totalActiveStreaks) active"))
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                     }
@@ -100,7 +100,7 @@ struct EngagementView: View {
                                 Text("\(best.longestCount)")
                                     .font(.title2.bold())
                             }
-                            Text("Personal Best")
+                            Text(String(localized: "Personal Best"))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -137,7 +137,7 @@ struct EngagementView: View {
                         HStack {
                             Image(systemName: category.icon)
                                 .foregroundStyle(.blue)
-                            Text(category.rawValue)
+                            Text(category.displayName)
                                 .font(.headline)
                         }
                         .padding(.horizontal)
@@ -160,7 +160,7 @@ struct EngagementView: View {
             // Active challenge
             if let challenge = viewModel.activeChallenge {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Active Challenge")
+                    Text(String(localized: "Active Challenge"))
                         .font(.headline)
                         .padding(.horizontal)
 
@@ -168,7 +168,7 @@ struct EngagementView: View {
                         .padding(.horizontal)
 
                     Button(action: viewModel.abandonChallenge) {
-                        Text("Abandon Challenge")
+                        Text(String(localized: "Abandon Challenge"))
                             .font(.caption)
                             .foregroundStyle(.red)
                     }
@@ -190,7 +190,7 @@ struct EngagementView: View {
 
             if !completed.isEmpty {
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Completed")
+                    Text(String(localized: "Completed"))
                         .font(.headline)
                         .padding(.horizontal)
 
@@ -247,21 +247,21 @@ struct EngagementView: View {
 
             // Tips
             VStack(alignment: .leading, spacing: 12) {
-                Text("Tips")
+                Text(String(localized: "Tips"))
                     .font(.headline)
                     .padding(.horizontal)
 
                 GoalTipCard(
                     icon: "scalemass.fill",
-                    title: "Log Regularly",
-                    description: "Log your weight at the same time each day for accurate tracking."
+                    title: String(localized: "Log Regularly"),
+                    description: String(localized: "Log your weight at the same time each day for accurate tracking.")
                 )
                 .padding(.horizontal)
 
                 GoalTipCard(
                     icon: "chart.line.uptrend.xyaxis",
-                    title: "Focus on Trends",
-                    description: "Daily fluctuations are normal. Watch the weekly trend instead."
+                    title: String(localized: "Focus on Trends"),
+                    description: String(localized: "Daily fluctuations are normal. Watch the weekly trend instead.")
                 )
                 .padding(.horizontal)
             }

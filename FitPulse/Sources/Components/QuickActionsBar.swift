@@ -11,28 +11,28 @@ struct QuickActionsBar: View {
         HStack(spacing: 0) {
             QuickActionButton(
                 icon: "drop.fill",
-                label: "Water",
+                label: String(localized: "Water"),
                 color: .cyan,
                 action: onLogWater
             )
 
             QuickActionButton(
                 icon: "fork.knife",
-                label: "Meal",
+                label: String(localized: "Meal"),
                 color: .green,
                 action: onLogMeal
             )
 
             QuickActionButton(
                 icon: "figure.run",
-                label: "Workout",
+                label: String(localized: "Workout"),
                 color: .orange,
                 action: onStartWorkout
             )
 
             QuickActionButton(
                 icon: "scalemass.fill",
-                label: "Weight",
+                label: String(localized: "Weight"),
                 color: .purple,
                 action: onLogWeight
             )

@@ -15,7 +15,7 @@ struct WorkoutsView: View {
                     )
 
                     // Time Range Picker
-                    Picker("Time Range", selection: $viewModel.selectedTimeRange) {
+                    Picker(String(localized: "Time Range"), selection: $viewModel.selectedTimeRange) {
                         ForEach(WorkoutsViewModel.TimeRange.allCases, id: \.self) { range in
                             Text(range.rawValue).tag(range)
                         }
@@ -29,7 +29,7 @@ struct WorkoutsView: View {
                             totalWorkouts: stats.totalWorkouts,
                             totalMinutes: stats.totalDurationMinutes,
                             totalCalories: stats.totalCaloriesBurned,
-                            period: "This Week"
+                            period: String(localized: "This Week")
                         )
                     }
 
@@ -40,7 +40,7 @@ struct WorkoutsView: View {
 
                     // Workouts List
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Workout History")
+                        Text(String(localized: "Workout History"))
                             .font(.headline)
                             .padding(.horizontal)
 
@@ -68,7 +68,7 @@ struct WorkoutsView: View {
                 }
                 .padding(.vertical)
             }
-            .navigationTitle("Workouts")
+            .navigationTitle(String(localized: "Workouts"))
             .refreshable {
                 await viewModel.refreshWorkouts()
             }
@@ -100,10 +100,10 @@ struct EmptyWorkoutsView: View {
                 .font(.system(size: 48))
                 .foregroundStyle(.secondary)
 
-            Text("No Workouts Yet")
+            Text(String(localized: "No Workouts Yet"))
                 .font(.headline)
 
-            Text("Your workouts from Apple Health will appear here.")
+            Text(String(localized: "Your workouts from Apple Health will appear here."))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)

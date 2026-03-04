@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct NutritionView: View {
+    var autoShowMealLogger: Bool = false
+
     @StateObject private var viewModel = NutritionViewModel()
     @State private var showingMealLogger = false
     @State private var selectedMealType: Meal.MealType = .breakfast
@@ -38,33 +40,33 @@ struct NutritionView: View {
                     if let targets = viewModel.targets {
                         VStack(spacing: 16) {
                             HStack {
-                                Text("Macronutrients")
+                                Text(String(localized: "Macronutrients"))
                                     .font(.headline)
                                 Spacer()
                             }
 
                             MacroTargetCard(
-                                name: "Protein",
+                                name: String(localized: "Protein"),
                                 current: viewModel.consumedProtein,
                                 target: targets.proteinGrams,
                                 color: .proteinColor,
-                                unit: "g"
+                                unit: String(localized: "g")
                             )
 
                             MacroTargetCard(
-                                name: "Carbohydrates",
+                                name: String(localized: "Carbohydrates"),
                                 current: viewModel.consumedCarbs,
                                 target: targets.carbGrams,
                                 color: .carbsColor,
-                                unit: "g"
+                                unit: String(localized: "g")
                             )
 
                             MacroTargetCard(
-                                name: "Fat",
+                                name: String(localized: "Fat"),
                                 current: viewModel.consumedFat,
                                 target: targets.fatGrams,
                                 color: .fatColor,
-                                unit: "g"
+                                unit: String(localized: "g")
                             )
                         }
                         .padding()
@@ -75,7 +77,7 @@ struct NutritionView: View {
                     // Today's Meals
                     VStack(spacing: 16) {
                         HStack {
-                            Text("Today's Meals")
+                            Text(String(localized: "Today's Meals"))
                                 .font(.headline)
 
                             Spacer()
@@ -119,7 +121,7 @@ struct NutritionView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Nutrition")
+            .navigationTitle(String(localized: "Nutrition"))
             .refreshable {
                 await viewModel.refreshData()
             }
@@ -130,6 +132,11 @@ struct NutritionView: View {
                         viewModel.logMeal(meal)
                     }
                 )
+            }
+            .onAppear {
+                if autoShowMealLogger {
+                    showingMealLogger = true
+                }
             }
             .sheet(isPresented: $viewModel.showingMealSuggestions) {
                 MealSuggestionsSheet(
@@ -177,7 +184,7 @@ struct DailyNutritionCard: View {
     var body: some View {
         VStack(spacing: 20) {
             HStack {
-                Text("Today")
+                Text(String(localized: "Today"))
                     .font(.headline)
 
                 Spacer()
@@ -206,7 +213,7 @@ struct DailyNutritionCard: View {
                         Text("\(Int(consumed.calories))")
                             .font(.title2.bold())
 
-                        Text("kcal")
+                        Text(String(localized: "kcal"))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -215,11 +222,11 @@ struct DailyNutritionCard: View {
 
                 VStack(alignment: .leading, spacing: 12) {
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Remaining")
+                        Text(String(localized: "Remaining"))
                             .font(.caption)
                             .foregroundStyle(.secondary)
 
-                        Text("\(Int(max(0, remaining))) kcal")
+                        Text(String(localized: "\(Int(max(0, remaining))) kcal"))
                             .font(.title3.bold())
                             .foregroundStyle(remaining < 0 ? .red : .primary)
                     }
@@ -232,9 +239,9 @@ struct DailyNutritionCard: View {
                     .frame(height: 10)
 
                     HStack(spacing: 12) {
-                        MacroMiniLabel(value: Int(consumed.protein), unit: "g", label: "P", color: .proteinColor)
-                        MacroMiniLabel(value: Int(consumed.carbs), unit: "g", label: "C", color: .carbsColor)
-                        MacroMiniLabel(value: Int(consumed.fat), unit: "g", label: "F", color: .fatColor)
+                        MacroMiniLabel(value: Int(consumed.protein), unit: String(localized: "g"), label: String(localized: "P"), color: .proteinColor)
+                        MacroMiniLabel(value: Int(consumed.carbs), unit: String(localized: "g"), label: String(localized: "C"), color: .carbsColor)
+                        MacroMiniLabel(value: Int(consumed.fat), unit: String(localized: "g"), label: String(localized: "F"), color: .fatColor)
                     }
                 }
             }
@@ -289,7 +296,7 @@ struct MealSlotCard: View {
                 Spacer()
 
                 if !meals.isEmpty {
-                    Text("\(Int(totalCalories)) kcal")
+                    Text(String(localized: "\(Int(totalCalories)) kcal"))
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -304,19 +311,19 @@ struct MealSlotCard: View {
             if meals.isEmpty {
                 if let suggestion = suggestion {
                     HStack {
-                        Text("Suggested: \(suggestion.title)")
+                        Text(String(localized: "Suggested: \(suggestion.title)"))
                             .font(.caption)
                             .foregroundStyle(.secondary)
 
                         Spacer()
 
-                        Text("\(suggestion.targetCalories) kcal")
+                        Text(String(localized: "\(suggestion.targetCalories) kcal"))
                             .font(.caption)
                             .foregroundStyle(.tertiary)
                     }
                     .padding(.leading, 40)
                 } else {
-                    Text("Tap + to log a meal")
+                    Text(String(localized: "Tap + to log a meal"))
                         .font(.caption)
                         .foregroundStyle(.tertiary)
                         .padding(.leading, 40)
@@ -329,7 +336,7 @@ struct MealSlotCard: View {
 
                         Spacer()
 
-                        Text("\(Int(meal.calories)) kcal")
+                        Text(String(localized: "\(Int(meal.calories)) kcal"))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -351,12 +358,12 @@ struct MealPlanCard: View {
     var body: some View {
         VStack(spacing: 16) {
             HStack {
-                Text("Suggested Meals")
+                Text(String(localized: "Suggested Meals"))
                     .font(.headline)
 
                 Spacer()
 
-                Text("\(plan.totalPlannedCalories) kcal total")
+                Text(String(localized: "\(plan.totalPlannedCalories) kcal total"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -394,8 +401,8 @@ struct MealSuggestionRow: View {
                     .font(.subheadline)
 
                 HStack(spacing: 8) {
-                    Text("\(suggestion.targetCalories) kcal")
-                    Text("\(suggestion.targetProtein)g protein")
+                    Text(String(localized: "\(suggestion.targetCalories) kcal"))
+                    Text(String(localized: "\(suggestion.targetProtein)g protein"))
                 }
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -404,7 +411,7 @@ struct MealSuggestionRow: View {
             Spacer()
 
             Button(action: onSelect) {
-                Text("Log")
+                Text(String(localized: "Log"))
                     .font(.caption.bold())
                     .foregroundStyle(.blue)
             }
@@ -419,97 +426,268 @@ struct MealLoggerSheet: View {
     let onLog: (Meal) -> Void
 
     @Environment(\.dismiss) private var dismiss
+    @State private var logMode: MealLogMode = .aiEstimate
+
+    // AI Estimate state
+    @State private var description = ""
+    @State private var isParsingMeal = false
+    @State private var parsedMealPreview: LLMParsedMeal?
+    @State private var mealParseError: String?
+    @State private var selectedMealType: Meal.MealType
+
+    // Manual entry fields
     @State private var name = ""
     @State private var calories = ""
     @State private var protein = ""
     @State private var carbs = ""
     @State private var fat = ""
 
+    enum MealLogMode: CaseIterable {
+        case aiEstimate
+        case manual
+
+        var displayName: String {
+            switch self {
+            case .aiEstimate: return String(localized: "AI Estimate")
+            case .manual: return String(localized: "Manual")
+            }
+        }
+    }
+
+    init(mealType: Meal.MealType, onLog: @escaping (Meal) -> Void) {
+        self.mealType = mealType
+        self.onLog = onLog
+        self._selectedMealType = State(initialValue: mealType)
+    }
+
     var body: some View {
         NavigationStack {
-            Form {
-                Section("Meal Details") {
-                    TextField("Meal name", text: $name)
-
-                    Picker("Type", selection: .constant(mealType)) {
-                        ForEach(Meal.MealType.allCases, id: \.self) { type in
-                            Text(type.rawValue).tag(type)
-                        }
+            VStack(spacing: 0) {
+                Picker(String(localized: "Mode"), selection: $logMode) {
+                    ForEach(MealLogMode.allCases, id: \.self) {
+                        Text($0.displayName).tag($0)
                     }
                 }
+                .pickerStyle(.segmented)
+                .padding()
 
-                Section("Nutrition") {
-                    HStack {
-                        Text("Calories")
-                        Spacer()
-                        TextField("0", text: $calories)
-                            .keyboardType(.numberPad)
-                            .multilineTextAlignment(.trailing)
-                            .frame(width: 80)
-                        Text("kcal")
-                            .foregroundStyle(.secondary)
-                    }
-
-                    HStack {
-                        Text("Protein")
-                        Spacer()
-                        TextField("0", text: $protein)
-                            .keyboardType(.numberPad)
-                            .multilineTextAlignment(.trailing)
-                            .frame(width: 80)
-                        Text("g")
-                            .foregroundStyle(.secondary)
-                    }
-
-                    HStack {
-                        Text("Carbs")
-                        Spacer()
-                        TextField("0", text: $carbs)
-                            .keyboardType(.numberPad)
-                            .multilineTextAlignment(.trailing)
-                            .frame(width: 80)
-                        Text("g")
-                            .foregroundStyle(.secondary)
-                    }
-
-                    HStack {
-                        Text("Fat")
-                        Spacer()
-                        TextField("0", text: $fat)
-                            .keyboardType(.numberPad)
-                            .multilineTextAlignment(.trailing)
-                            .frame(width: 80)
-                        Text("g")
-                            .foregroundStyle(.secondary)
-                    }
+                if logMode == .aiEstimate {
+                    aiEstimateContent
+                } else {
+                    manualModeContent
                 }
             }
-            .navigationTitle("Log Meal")
+            .navigationTitle(String(localized: "Log Meal"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
+                    Button(String(localized: "Cancel")) { dismiss() }
                 }
-
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Save") {
-                        let meal = Meal(
-                            name: name.isEmpty ? mealType.rawValue : name,
-                            mealType: mealType,
-                            calories: Double(calories) ?? 0,
-                            protein: Double(protein) ?? 0,
-                            carbs: Double(carbs) ?? 0,
-                            fat: Double(fat) ?? 0
-                        )
-                        onLog(meal)
-                        dismiss()
+                    if logMode == .manual {
+                        Button(String(localized: "Save")) { saveManualMeal() }
+                            .disabled(name.isEmpty && calories.isEmpty)
                     }
-                    .disabled(name.isEmpty && calories.isEmpty)
                 }
             }
         }
+    }
+
+    private var aiEstimateContent: some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(String(localized: "Describe what you ate"))
+                        .font(.headline)
+                    TextEditor(text: $description)
+                        .frame(minHeight: 80)
+                        .padding(8)
+                        .background(Color.secondary.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    Text(String(localized: "Example: \"200g chicken breast with 150g white rice and a mixed salad\""))
+                        .font(.caption)
+                        .foregroundStyle(.tertiary)
+                }
+
+                Picker(String(localized: "Meal Type"), selection: $selectedMealType) {
+                    ForEach(Meal.MealType.allCases, id: \.self) {
+                        Text($0.rawValue).tag($0)
+                    }
+                }
+                .pickerStyle(.segmented)
+
+                Button(action: {
+                    Task { await parseMeal() }
+                }) {
+                    HStack {
+                        if isParsingMeal {
+                            ProgressView()
+                                .tint(.white)
+                                .padding(.trailing, 4)
+                            Text(String(localized: "Analyzing..."))
+                        } else {
+                            Image(systemName: "sparkles")
+                            Text(String(localized: "Analyze with AI"))
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(description.isEmpty ? Color.gray : Color.purple)
+                    .foregroundStyle(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .disabled(description.isEmpty || isParsingMeal)
+
+                if let parsed = parsedMealPreview {
+                    LLMMealPreviewCard(parsed: parsed) {
+                        confirmParsedMeal(parsed)
+                    }
+                }
+
+                if let error = mealParseError {
+                    Text(error)
+                        .font(.caption)
+                        .foregroundStyle(.red)
+                }
+
+                Spacer()
+            }
+            .padding()
+        }
+    }
+
+    private var manualModeContent: some View {
+        Form {
+            Section(String(localized: "Meal Details")) {
+                TextField(String(localized: "Meal name"), text: $name)
+                Picker(String(localized: "Type"), selection: $selectedMealType) {
+                    ForEach(Meal.MealType.allCases, id: \.self) { type in
+                        Text(type.rawValue).tag(type)
+                    }
+                }
+            }
+            Section(String(localized: "Nutrition")) {
+                MacroInputRow(label: String(localized: "Calories"), value: $calories, unit: String(localized: "kcal"))
+                MacroInputRow(label: String(localized: "Protein"), value: $protein, unit: String(localized: "g"))
+                MacroInputRow(label: String(localized: "Carbs"), value: $carbs, unit: String(localized: "g"))
+                MacroInputRow(label: String(localized: "Fat"), value: $fat, unit: String(localized: "g"))
+            }
+        }
+    }
+
+    private func parseMeal() async {
+        isParsingMeal = true
+        mealParseError = nil
+        parsedMealPreview = nil
+        do {
+            let parsed = try await LLMService.shared.parseMealFromDescription(description)
+            parsedMealPreview = parsed
+        } catch {
+            mealParseError = String(localized: "Could not parse meal. Try being more specific or use manual entry.")
+        }
+        isParsingMeal = false
+    }
+
+    private func confirmParsedMeal(_ parsed: LLMParsedMeal) {
+        let foods = parsed.foods.map { f in
+            Food(name: f.name, servingSize: f.servingSize,
+                 calories: f.calories, protein: f.protein,
+                 carbs: f.carbs, fat: f.fat)
+        }
+        let meal = Meal(
+            name: parsed.mealName,
+            mealType: selectedMealType,
+            calories: parsed.totalCalories,
+            protein: parsed.totalProtein,
+            carbs: parsed.totalCarbs,
+            fat: parsed.totalFat,
+            foods: foods
+        )
+        onLog(meal)
+
+        // Reset for next meal instead of dismissing
+        description = ""
+        parsedMealPreview = nil
+        mealParseError = nil
+    }
+
+    private func saveManualMeal() {
+        let meal = Meal(
+            name: name.isEmpty ? selectedMealType.rawValue : name,
+            mealType: selectedMealType,
+            calories: Double(calories) ?? 0,
+            protein: Double(protein) ?? 0,
+            carbs: Double(carbs) ?? 0,
+            fat: Double(fat) ?? 0
+        )
+        onLog(meal)
+        dismiss()
+    }
+}
+
+struct MacroInputRow: View {
+    let label: String
+    @Binding var value: String
+    let unit: String
+
+    var body: some View {
+        HStack {
+            Text(label)
+            Spacer()
+            TextField(String(localized: "0"), text: $value)
+                .keyboardType(.numberPad)
+                .multilineTextAlignment(.trailing)
+                .frame(width: 80)
+            Text(unit)
+                .foregroundStyle(.secondary)
+        }
+    }
+}
+
+struct LLMMealPreviewCard: View {
+    let parsed: LLMParsedMeal
+    let onConfirm: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text(parsed.mealName)
+                    .font(.headline)
+                Spacer()
+                Text(String(localized: "\(Int(parsed.totalCalories)) kcal"))
+                    .font(.subheadline.bold())
+            }
+
+            ForEach(parsed.foods, id: \.name) { food in
+                HStack {
+                    Text(food.name)
+                        .font(.subheadline)
+                    Spacer()
+                    Text(food.servingSize)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            HStack(spacing: 16) {
+                MacroMiniLabel(value: Int(parsed.totalProtein), unit: String(localized: "g"), label: String(localized: "P"), color: .proteinColor)
+                MacroMiniLabel(value: Int(parsed.totalCarbs), unit: String(localized: "g"), label: String(localized: "C"), color: .carbsColor)
+                MacroMiniLabel(value: Int(parsed.totalFat), unit: String(localized: "g"), label: String(localized: "F"), color: .fatColor)
+            }
+
+            Button(action: onConfirm) {
+                Text(String(localized: "Log This Meal"))
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .background(Color.blue)
+                    .foregroundStyle(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+            }
+        }
+        .padding()
+        .background(.ultraThinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
     }
 }
 
@@ -533,11 +711,11 @@ struct MealSuggestionsSheet: View {
                 }
                 .padding()
             }
-            .navigationTitle("\(mealType.rawValue) Ideas")
+            .navigationTitle(String(localized: "\(mealType.rawValue) Ideas"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") {
+                    Button(String(localized: "Done")) {
                         dismiss()
                     }
                 }
@@ -579,7 +757,7 @@ struct TrainingNutritionCard: View {
                     Image(systemName: "clock.fill")
                         .foregroundStyle(.orange)
 
-                    Text("Recovery window: \(remaining) min left")
+                    Text(String(localized: "Recovery window: \(remaining) min left"))
                         .font(.subheadline.bold())
                         .foregroundStyle(.orange)
 
@@ -635,7 +813,7 @@ struct TrainingTipRow: View {
                 Spacer()
 
                 if tip.priority == .high {
-                    Text("Important")
+                    Text(String(localized: "Important"))
                         .font(.caption2)
                         .foregroundStyle(.white)
                         .padding(.horizontal, 6)
@@ -669,7 +847,7 @@ struct TrainingTipRow: View {
                                 Text(meal.title)
                                     .font(.caption.bold())
 
-                                Text("\(meal.targetCalories) kcal • \(meal.targetProtein)g protein")
+                                Text(String(localized: "\(meal.targetCalories) kcal \u{2022} \(meal.targetProtein)g protein"))
                                     .font(.caption2)
                                     .foregroundStyle(.secondary)
                             }
@@ -677,7 +855,7 @@ struct TrainingTipRow: View {
                             Spacer()
 
                             Button(action: { onLogMeal(meal) }) {
-                                Text("Log")
+                                Text(String(localized: "Log"))
                                     .font(.caption.bold())
                                     .foregroundStyle(.blue)
                                     .padding(.horizontal, 10)

@@ -17,7 +17,7 @@ struct SettingsView: View {
                 DataSection(viewModel: viewModel, showingDeleteConfirmation: $showingDeleteConfirmation)
                 AboutSection()
             }
-            .navigationTitle("Settings")
+            .navigationTitle(String(localized: "Settings"))
             .sheet(isPresented: $viewModel.showingWeightInput) {
                 WeightInputSheet(
                     currentWeight: viewModel.profile.weightKg,
@@ -28,13 +28,13 @@ struct SettingsView: View {
                     }
                 )
             }
-            .alert("Clear All Data?", isPresented: $showingDeleteConfirmation) {
-                Button("Cancel", role: .cancel) {}
-                Button("Clear", role: .destructive) {
+            .alert(String(localized: "Clear All Data?"), isPresented: $showingDeleteConfirmation) {
+                Button(String(localized: "Cancel"), role: .cancel) {}
+                Button(String(localized: "Clear"), role: .destructive) {
                     viewModel.clearAllData()
                 }
             } message: {
-                Text("This will delete all your saved meals, weight history, and preferences. This cannot be undone.")
+                Text(String(localized: "This will delete all your saved meals, weight history, and preferences. This cannot be undone."))
             }
         }
     }
@@ -45,60 +45,60 @@ struct ProfileSection: View {
     @ObservedObject var viewModel: SettingsViewModel
 
     var body: some View {
-        Section("Profile") {
+        Section(String(localized: "Profile")) {
             HStack {
-                Text("Name")
+                Text(String(localized: "Name"))
                 Spacer()
-                TextField("Your name", text: $viewModel.profile.name)
+                TextField(String(localized: "Your name"), text: $viewModel.profile.name)
                     .multilineTextAlignment(.trailing)
                     .onChange(of: viewModel.profile.name) { _, _ in
                         viewModel.saveProfile()
                     }
             }
 
-            Picker("Sex", selection: $viewModel.profile.sex) {
+            Picker(String(localized: "Sex"), selection: $viewModel.profile.sex) {
                 ForEach(UserProfile.Sex.allCases, id: \.self) { sex in
-                    Text(sex.rawValue).tag(sex)
+                    Text(sex.displayName).tag(sex)
                 }
             }
             .onChange(of: viewModel.profile.sex) { _, _ in
                 viewModel.saveProfile()
             }
 
-            Stepper("Age: \(viewModel.profile.age)", value: $viewModel.profile.age, in: 13...120)
+            Stepper(String(localized: "Age: \(viewModel.profile.age)"), value: $viewModel.profile.age, in: 13...120)
                 .onChange(of: viewModel.profile.age) { _, _ in
                     viewModel.saveProfile()
                 }
 
             HStack {
-                Text("Height")
+                Text(String(localized: "Height"))
                 Spacer()
-                TextField("cm", value: $viewModel.profile.heightCm, format: .number)
+                TextField(String(localized: "cm"), value: $viewModel.profile.heightCm, format: .number)
                     .keyboardType(.decimalPad)
                     .multilineTextAlignment(.trailing)
                     .frame(width: 60)
                     .onChange(of: viewModel.profile.heightCm) { _, _ in
                         viewModel.saveProfile()
                     }
-                Text("cm")
+                Text(String(localized: "cm"))
                     .foregroundStyle(.secondary)
             }
 
             HStack {
-                Text("Weight")
+                Text(String(localized: "Weight"))
                 Spacer()
-                TextField("kg", value: $viewModel.profile.weightKg, format: .number)
+                TextField(String(localized: "kg"), value: $viewModel.profile.weightKg, format: .number)
                     .keyboardType(.decimalPad)
                     .multilineTextAlignment(.trailing)
                     .frame(width: 60)
                     .onChange(of: viewModel.profile.weightKg) { _, _ in
                         viewModel.saveProfile()
                     }
-                Text("kg")
+                Text(String(localized: "kg"))
                     .foregroundStyle(.secondary)
             }
 
-            Button("Log New Weight") {
+            Button(String(localized: "Log New Weight")) {
                 viewModel.showingWeightInput = true
             }
         }
@@ -110,40 +110,40 @@ struct GoalsSection: View {
     @ObservedObject var viewModel: SettingsViewModel
 
     var body: some View {
-        Section("Fitness Goals") {
-            Picker("Goal", selection: $viewModel.profile.fitnessGoal) {
+        Section(String(localized: "Fitness Goals")) {
+            Picker(String(localized: "Goal"), selection: $viewModel.profile.fitnessGoal) {
                 ForEach(UserProfile.FitnessGoal.allCases, id: \.self) { goal in
-                    Label(goal.rawValue, systemImage: goal.icon).tag(goal)
+                    Label(goal.displayName, systemImage: goal.icon).tag(goal)
                 }
             }
             .onChange(of: viewModel.profile.fitnessGoal) { _, _ in
                 viewModel.updateGoalSettings()
             }
 
-            Picker("Activity Level", selection: $viewModel.profile.activityLevel) {
+            Picker(String(localized: "Activity Level"), selection: $viewModel.profile.activityLevel) {
                 ForEach(UserProfile.ActivityLevel.allCases, id: \.self) { level in
-                    Text(level.rawValue).tag(level)
+                    Text(level.displayName).tag(level)
                 }
             }
             .onChange(of: viewModel.profile.activityLevel) { _, _ in
                 viewModel.saveProfile()
             }
 
-            Stepper("Weekly Workouts: \(viewModel.profile.weeklyWorkoutGoal)", value: $viewModel.profile.weeklyWorkoutGoal, in: 1...7)
+            Stepper(String(localized: "Weekly Workouts: \(viewModel.profile.weeklyWorkoutGoal)"), value: $viewModel.profile.weeklyWorkoutGoal, in: 1...7)
                 .onChange(of: viewModel.profile.weeklyWorkoutGoal) { _, _ in
                     viewModel.saveProfile()
                 }
 
-            Stepper("Daily Steps: \(viewModel.profile.dailyStepsGoal.formattedSteps)", value: $viewModel.profile.dailyStepsGoal, in: 1000...30000, step: 1000)
+            Stepper(String(localized: "Daily Steps: \(viewModel.profile.dailyStepsGoal.formattedSteps)"), value: $viewModel.profile.dailyStepsGoal, in: 1000...30000, step: 1000)
                 .onChange(of: viewModel.profile.dailyStepsGoal) { _, _ in
                     viewModel.saveProfile()
                 }
 
             VStack(alignment: .leading) {
                 HStack {
-                    Text("Sleep Goal")
+                    Text(String(localized: "Sleep Goal"))
                     Spacer()
-                    Text("\(viewModel.profile.sleepGoalHours, specifier: "%.1f") hours")
+                    Text(String(localized: "\(viewModel.profile.sleepGoalHours, specifier: "%.1f") hours"))
                         .foregroundStyle(.secondary)
                 }
                 Slider(value: $viewModel.profile.sleepGoalHours, in: 5...10, step: 0.5)
@@ -160,10 +160,10 @@ struct NutritionSection: View {
     @ObservedObject var viewModel: SettingsViewModel
 
     var body: some View {
-        Section("Nutrition") {
+        Section(String(localized: "Nutrition")) {
             VStack(alignment: .leading) {
                 HStack {
-                    Text("Deficit")
+                    Text(String(localized: "Deficit"))
                     Spacer()
                     Text(viewModel.deficitDescription)
                         .foregroundStyle(.secondary)
@@ -182,9 +182,9 @@ struct NutritionSection: View {
 
             VStack(alignment: .leading) {
                 HStack {
-                    Text("Protein")
+                    Text(String(localized: "Protein"))
                     Spacer()
-                    Text("\(viewModel.profile.proteinPerKg, specifier: "%.1f") g/kg")
+                    Text(String(localized: "\(viewModel.profile.proteinPerKg, specifier: "%.1f") g/kg"))
                         .foregroundStyle(.secondary)
                 }
                 Slider(value: $viewModel.profile.proteinPerKg, in: 1.2...2.5, step: 0.1)
@@ -195,9 +195,9 @@ struct NutritionSection: View {
 
             VStack(alignment: .leading) {
                 HStack {
-                    Text("Fat")
+                    Text(String(localized: "Fat"))
                     Spacer()
-                    Text("\(viewModel.profile.fatPerKg, specifier: "%.1f") g/kg")
+                    Text(String(localized: "\(viewModel.profile.fatPerKg, specifier: "%.1f") g/kg"))
                         .foregroundStyle(.secondary)
                 }
                 Slider(value: $viewModel.profile.fatPerKg, in: 0.5...1.2, step: 0.1)
@@ -214,18 +214,18 @@ struct TargetsSection: View {
     @ObservedObject var viewModel: SettingsViewModel
 
     var body: some View {
-        Section("Your Targets") {
-            LabeledContent("BMR", value: "\(Int(viewModel.estimatedBMR)) kcal")
-            LabeledContent("TDEE", value: "\(Int(viewModel.estimatedTDEE)) kcal")
-            LabeledContent("Target Calories", value: "\(Int(viewModel.targetCalories)) kcal")
+        Section(String(localized: "Your Targets")) {
+            LabeledContent(String(localized: "BMR"), value: String(localized: "\(Int(viewModel.estimatedBMR)) kcal"))
+            LabeledContent(String(localized: "TDEE"), value: String(localized: "\(Int(viewModel.estimatedTDEE)) kcal"))
+            LabeledContent(String(localized: "Target Calories"), value: String(localized: "\(Int(viewModel.targetCalories)) kcal"))
             Divider()
-            LabeledContent("Protein", value: "\(Int(viewModel.proteinTarget))g")
-            LabeledContent("Carbs", value: "\(Int(viewModel.carbTarget))g")
-            LabeledContent("Fat", value: "\(Int(viewModel.fatTarget))g")
+            LabeledContent(String(localized: "Protein"), value: String(localized: "\(Int(viewModel.proteinTarget))g"))
+            LabeledContent(String(localized: "Carbs"), value: String(localized: "\(Int(viewModel.carbTarget))g"))
+            LabeledContent(String(localized: "Fat"), value: String(localized: "\(Int(viewModel.fatTarget))g"))
 
             if viewModel.profile.fitnessGoal == .loseWeight {
                 Divider()
-                LabeledContent("Expected Weekly Loss", value: String(format: "%.2f kg", viewModel.expectedWeeklyLoss))
+                LabeledContent(String(localized: "Expected Weekly Loss"), value: String(localized: "\(viewModel.expectedWeeklyLoss, specifier: "%.2f") kg"))
             }
         }
     }
@@ -236,7 +236,7 @@ struct HealthSection: View {
     @ObservedObject var viewModel: SettingsViewModel
 
     var body: some View {
-        Section("Health Integration") {
+        Section(String(localized: "Health Integration")) {
             Button(action: {
                 Task {
                     await viewModel.requestHealthKitPermissions()
@@ -245,7 +245,7 @@ struct HealthSection: View {
                 HStack {
                     Image(systemName: "heart.fill")
                         .foregroundStyle(.red)
-                    Text("Connect Apple Health")
+                    Text(String(localized: "Connect Apple Health"))
                     Spacer()
                     Image(systemName: "chevron.right")
                         .foregroundStyle(.tertiary)
@@ -260,12 +260,12 @@ struct AppearanceSection: View {
     @ObservedObject var viewModel: SettingsViewModel
 
     var body: some View {
-        Section("Appearance") {
-            Toggle("Dark Mode", isOn: $viewModel.profile.prefersDarkMode)
+        Section(String(localized: "Appearance")) {
+            Toggle(String(localized: "Dark Mode"), isOn: $viewModel.profile.prefersDarkMode)
                 .onChange(of: viewModel.profile.prefersDarkMode) { _, _ in
                     viewModel.saveProfile()
                 }
-            Toggle("Notifications", isOn: $viewModel.profile.notificationsEnabled)
+            Toggle(String(localized: "Notifications"), isOn: $viewModel.profile.notificationsEnabled)
                 .onChange(of: viewModel.profile.notificationsEnabled) { _, _ in
                     viewModel.saveProfile()
                 }
@@ -279,15 +279,15 @@ struct DataSection: View {
     @Binding var showingDeleteConfirmation: Bool
 
     var body: some View {
-        Section("Data") {
+        Section(String(localized: "Data")) {
             NavigationLink(destination: WeightHistoryView(entries: viewModel.weightHistory)) {
-                Label("Weight History", systemImage: "chart.line.uptrend.xyaxis")
+                Label(String(localized: "Weight History"), systemImage: "chart.line.uptrend.xyaxis")
             }
 
             Button(role: .destructive, action: {
                 showingDeleteConfirmation = true
             }) {
-                Label("Clear All Data", systemImage: "trash")
+                Label(String(localized: "Clear All Data"), systemImage: "trash")
             }
         }
     }
@@ -296,9 +296,9 @@ struct DataSection: View {
 // MARK: - About Section
 struct AboutSection: View {
     var body: some View {
-        Section("About") {
-            LabeledContent("Version", value: "1.0.0")
-            LabeledContent("Build", value: "1")
+        Section(String(localized: "About")) {
+            LabeledContent(String(localized: "Version"), value: "1.0.0")
+            LabeledContent(String(localized: "Build"), value: "1")
         }
     }
 }
@@ -311,9 +311,9 @@ struct WeightHistoryView: View {
         List {
             if entries.isEmpty {
                 ContentUnavailableView(
-                    "No Weight Data",
+                    String(localized: "No Weight Data"),
                     systemImage: "scalemass",
-                    description: Text("Log your weight to track your progress")
+                    description: Text(String(localized: "Log your weight to track your progress"))
                 )
             } else {
                 if entries.count >= 2 {
@@ -324,7 +324,7 @@ struct WeightHistoryView: View {
                     }
                 }
 
-                Section("History") {
+                Section(String(localized: "History")) {
                     ForEach(entries.reversed()) { entry in
                         HStack {
                             VStack(alignment: .leading) {
@@ -347,7 +347,7 @@ struct WeightHistoryView: View {
                 }
             }
         }
-        .navigationTitle("Weight History")
+        .navigationTitle(String(localized: "Weight History"))
     }
 }
 
@@ -357,14 +357,14 @@ struct WeightTrendChart: View {
     var body: some View {
         Chart(entries) { entry in
             LineMark(
-                x: .value("Date", entry.date),
-                y: .value("Weight", entry.weightKg)
+                x: .value(String(localized: "Date"), entry.date),
+                y: .value(String(localized: "Weight"), entry.weightKg)
             )
             .foregroundStyle(.blue)
 
             PointMark(
-                x: .value("Date", entry.date),
-                y: .value("Weight", entry.weightKg)
+                x: .value(String(localized: "Date"), entry.date),
+                y: .value(String(localized: "Weight"), entry.weightKg)
             )
             .foregroundStyle(.blue)
         }

@@ -27,7 +27,7 @@ struct WeeklyProgressView: View {
 
                     // Steps Chart
                     WeeklyMetricChart(
-                        title: "Steps",
+                        title: String(localized: "Steps"),
                         data: weekDays.map { ($0.date.shortDayOfWeek, Double($0.steps)) },
                         target: Double(profile.dailyStepsGoal),
                         color: .green,
@@ -36,7 +36,7 @@ struct WeeklyProgressView: View {
 
                     // Calories Chart
                     WeeklyMetricChart(
-                        title: "Active Calories",
+                        title: String(localized: "Active Calories"),
                         data: weekDays.map { ($0.date.shortDayOfWeek, $0.activeCalories) },
                         target: nil,
                         color: .orange,
@@ -45,7 +45,7 @@ struct WeeklyProgressView: View {
 
                     // Sleep Chart
                     WeeklyMetricChart(
-                        title: "Sleep",
+                        title: String(localized: "Sleep"),
                         data: weekDays.map { ($0.date.shortDayOfWeek, $0.sleepHours) },
                         target: profile.sleepGoalHours,
                         color: .indigo,
@@ -54,7 +54,7 @@ struct WeeklyProgressView: View {
 
                     // HRV Chart
                     WeeklyMetricChart(
-                        title: "HRV",
+                        title: String(localized: "HRV"),
                         data: weekDays.map { ($0.date.shortDayOfWeek, $0.hrvMs) },
                         target: nil,
                         color: .green,
@@ -63,7 +63,7 @@ struct WeeklyProgressView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Weekly Progress")
+            .navigationTitle(String(localized: "Weekly Progress"))
         }
     }
 }
@@ -94,7 +94,7 @@ struct WeeklyOverviewCard: View {
     var body: some View {
         VStack(spacing: 16) {
             HStack {
-                Text("This Week")
+                Text(String(localized: "This Week"))
                     .font(.headline)
 
                 Spacer()
@@ -107,7 +107,7 @@ struct WeeklyOverviewCard: View {
             HStack(spacing: 0) {
                 WeeklyStatBlock(
                     value: totalSteps.compact,
-                    label: "Steps",
+                    label: String(localized: "Steps"),
                     icon: "figure.walk"
                 )
 
@@ -116,7 +116,7 @@ struct WeeklyOverviewCard: View {
 
                 WeeklyStatBlock(
                     value: totalCalories.compact,
-                    label: "Calories",
+                    label: String(localized: "Calories"),
                     icon: "flame.fill"
                 )
 
@@ -125,7 +125,7 @@ struct WeeklyOverviewCard: View {
 
                 WeeklyStatBlock(
                     value: averageSleep.formatted1 + "h",
-                    label: "Avg Sleep",
+                    label: String(localized: "Avg Sleep"),
                     icon: "bed.double.fill"
                 )
 
@@ -134,7 +134,7 @@ struct WeeklyOverviewCard: View {
 
                 WeeklyStatBlock(
                     value: "\(workoutDays)",
-                    label: "Workouts",
+                    label: String(localized: "Workouts"),
                     icon: "figure.run"
                 )
             }

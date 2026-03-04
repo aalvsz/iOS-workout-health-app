@@ -28,6 +28,17 @@ enum HydrationSource: String, Codable, CaseIterable {
     case juice = "Juice"
     case other = "Other"
 
+    var displayName: String {
+        switch self {
+        case .water: return String(localized: "Water")
+        case .tea: return String(localized: "Tea")
+        case .coffee: return String(localized: "Coffee")
+        case .sportsDrink: return String(localized: "Sports Drink")
+        case .juice: return String(localized: "Juice")
+        case .other: return String(localized: "Other")
+        }
+    }
+
     var icon: String {
         switch self {
         case .water: return "drop.fill"
@@ -101,6 +112,16 @@ enum HydrationStatus: String, CaseIterable {
     case good = "Good"
     case excellent = "Excellent"
 
+    var displayName: String {
+        switch self {
+        case .dehydrated: return String(localized: "Dehydrated")
+        case .low: return String(localized: "Low")
+        case .adequate: return String(localized: "Adequate")
+        case .good: return String(localized: "Good")
+        case .excellent: return String(localized: "Excellent")
+        }
+    }
+
     var icon: String {
         switch self {
         case .dehydrated: return "drop.triangle.fill"
@@ -124,15 +145,15 @@ enum HydrationStatus: String, CaseIterable {
     var message: String {
         switch self {
         case .dehydrated:
-            return "You need to drink more water! Dehydration affects performance and recovery."
+            return String(localized: "You need to drink more water! Dehydration affects performance and recovery.")
         case .low:
-            return "Your hydration is below target. Try to drink a glass of water soon."
+            return String(localized: "Your hydration is below target. Try to drink a glass of water soon.")
         case .adequate:
-            return "You're adequately hydrated. Keep it up!"
+            return String(localized: "You're adequately hydrated. Keep it up!")
         case .good:
-            return "Good hydration! You're on track for the day."
+            return String(localized: "Good hydration! You're on track for the day.")
         case .excellent:
-            return "Excellent hydration! Your body will thank you."
+            return String(localized: "Excellent hydration! Your body will thank you.")
         }
     }
 

@@ -32,46 +32,57 @@ struct ContentView: View {
 
 struct MainTabView: View {
     @Binding var selectedTab: Int
+    @State private var showingCoach = false
 
     var body: some View {
         TabView(selection: $selectedTab) {
             HomeView()
                 .tabItem {
-                    Label("Today", systemImage: "house.fill")
+                    Label(String(localized: "Today"), systemImage: "house.fill")
                 }
                 .tag(0)
 
             GymView()
                 .tabItem {
-                    Label("Training", systemImage: "dumbbell.fill")
+                    Label(String(localized: "Training"), systemImage: "dumbbell.fill")
                 }
                 .tag(1)
 
             NutritionView()
                 .tabItem {
-                    Label("Nutrition", systemImage: "fork.knife")
+                    Label(String(localized: "Nutrition"), systemImage: "fork.knife")
                 }
                 .tag(2)
 
-            ChatView()
+            AnalyticsDashboardView()
                 .tabItem {
-                    Label("Coach", systemImage: "bubble.left.and.bubble.right.fill")
+                    Label(String(localized: "Analytics"), systemImage: "chart.bar.xaxis.ascending")
                 }
                 .tag(3)
 
-            EngagementView()
-                .tabItem {
-                    Label("Progress", systemImage: "trophy.fill")
-                }
-                .tag(4)
-
             ProfileView()
                 .tabItem {
-                    Label("Profile", systemImage: "person.fill")
+                    Label(String(localized: "Profile"), systemImage: "person.fill")
                 }
-                .tag(5)
+                .tag(4)
         }
         .tint(.blue)
+        .overlay(alignment: .bottomTrailing) {
+            Button(action: { showingCoach = true }) {
+                Image(systemName: "bubble.left.and.bubble.right.fill")
+                    .font(.title2)
+                    .foregroundStyle(.white)
+                    .frame(width: 56, height: 56)
+                    .background(Color.blue)
+                    .clipShape(Circle())
+                    .shadow(color: .black.opacity(0.2), radius: 8, y: 4)
+            }
+            .padding(.trailing, 20)
+            .padding(.bottom, 80)
+        }
+        .sheet(isPresented: $showingCoach) {
+            ChatView()
+        }
     }
 }
 
@@ -79,4 +90,5 @@ struct MainTabView: View {
     ContentView()
         .environmentObject(UserProfile())
         .environmentObject(HealthKitService.shared)
+        .environmentObject(SubscriptionManager.shared)
 }

@@ -48,7 +48,7 @@ struct MomentumRing: View {
                         .font(.system(size: 44, weight: .bold, design: .rounded))
                         .foregroundStyle(momentumColor)
 
-                    Text("MOMENTUM")
+                    Text(String(localized: "MOMENTUM"))
                         .font(.caption2.bold())
                         .foregroundStyle(.secondary)
                         .tracking(1.5)
@@ -63,10 +63,10 @@ struct MomentumRing: View {
 
             // Breakdown dots
             HStack(spacing: 24) {
-                MomentumDot(label: "Workouts", filled: momentum.workoutScore > 0.5, color: .orange)
-                MomentumDot(label: "Nutrition", filled: momentum.nutritionScore > 0.5, color: .green)
-                MomentumDot(label: "Hydration", filled: momentum.hydrationScore > 0.5, color: .cyan)
-                MomentumDot(label: "Recovery", filled: momentum.recoveryScore > 0.5, color: .purple)
+                MomentumDot(label: String(localized: "Workouts"), filled: momentum.workoutScore > 0.5, color: .orange)
+                MomentumDot(label: String(localized: "Nutrition"), filled: momentum.nutritionScore > 0.5, color: .green)
+                MomentumDot(label: String(localized: "Hydration"), filled: momentum.hydrationScore > 0.5, color: .cyan)
+                MomentumDot(label: String(localized: "Recovery"), filled: momentum.recoveryScore > 0.5, color: .purple)
             }
         }
         .padding()
@@ -121,11 +121,11 @@ struct MomentumScore {
 
     var message: String {
         switch score {
-        case 80...100: return "You're on fire! Keep this energy going."
-        case 60..<80: return "Strong momentum. Stay consistent!"
-        case 40..<60: return "Building momentum. Every action counts."
-        case 20..<40: return "Time to refocus. Start with one small win."
-        default: return "Let's get back on track today."
+        case 80...100: return String(localized: "You're on fire! Keep this energy going.")
+        case 60..<80: return String(localized: "Strong momentum. Stay consistent!")
+        case 40..<60: return String(localized: "Building momentum. Every action counts.")
+        case 20..<40: return String(localized: "Time to refocus. Start with one small win.")
+        default: return String(localized: "Let's get back on track today.")
         }
     }
 

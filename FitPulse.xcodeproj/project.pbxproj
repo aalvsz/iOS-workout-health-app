@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		L10N00000001 /* LocaleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = L10N00000002 /* LocaleHelper.swift */; };
+		L10N00000003 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = L10N00000004 /* Localizable.xcstrings */; };
+		BA1ADB364EA9431BA6EA7916 /* ExerciseModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C31F120363481BB82DF7C2 /* ExerciseModels.swift */; };
+		D053C50CAE1B4BAB9B5F2B07 /* WorkoutTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD3DD2735664CC981EB96D9 /* WorkoutTemplate.swift */; };
+		EE363289665C4440B4152B34 /* ExerciseLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8606C7C2F334D44863C231C /* ExerciseLibrary.swift */; };
+		737EAEDD29384867A2F7D2EF /* ExerciseLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D5AE05F31841BD98C9D2C1 /* ExerciseLibraryView.swift */; };
+		51147FF0BAB34B698D769E79 /* WorkoutTemplatesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E072528195634065ADC29FAA /* WorkoutTemplatesView.swift */; };
+		17614C8684394FE9949CF9B4 /* WeightTrendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDD132FB0AEC4B72B0C6F08D /* WeightTrendsView.swift */; };
+		5ED34009F7ED49F5AA39FE3E /* WeightTrendsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15D89E466068469CA52102F5 /* WeightTrendsViewModel.swift */; };
+		0424201D2D474F7CAC86B71A /* WorkoutTemplatesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D62AD9B22347EDBDE8FF7D /* WorkoutTemplatesViewModel.swift */; };
 		A1000001238D0001 /* FitPulseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001238D0002 /* FitPulseApp.swift */; };
 		A1000001238D0003 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001238D0004 /* ContentView.swift */; };
 		A1000001238D0005 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1000001238D0006 /* Assets.xcassets */; };
@@ -49,6 +59,7 @@
 		A1000001238D0068 /* WorkoutPlanGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001238D0069 /* WorkoutPlanGeneratorView.swift */; };
 		A1000001238D006A /* LLMService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001238D006B /* LLMService.swift */; };
 		A1000001238D006C /* HealthDataParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001238D006D /* HealthDataParser.swift */; };
+		A1000001238D00D0 /* NutritionDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001238D00D1 /* NutritionDatabase.swift */; };
 		A1000001238D006E /* GymViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001238D006F /* GymViewModel.swift */; };
 		A1000001238D0070 /* LocalLLMService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001238D0071 /* LocalLLMService.swift */; };
 		A1000001238D0072 /* LlamaContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001238D0073 /* LlamaContext.swift */; };
@@ -75,9 +86,33 @@
 		A1000001238D00B2 /* ChallengeComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001238D00B3 /* ChallengeComponents.swift */; };
 		A1000001238D00B4 /* EngagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001238D00B5 /* EngagementViewModel.swift */; };
 		A1000001238D00B6 /* EngagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000001238D00B7 /* EngagementView.swift */; };
+		087A4FCC92CC410D9A74E2C6 /* SubscriptionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7062C6A3DDAE47AD8E76774A /* SubscriptionManager.swift */; };
+		69B4BC059A254A208A1B71A2 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F08D589AB6624BA999ADF9D4 /* PaywallView.swift */; };
+		98F39FDA69924FF38730CE74 /* AnalyticsDashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D44D41302944139A30630A /* AnalyticsDashboardViewModel.swift */; };
+		9EFD657C58CD40DCAFC4EF7B /* AnalyticsDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015FAD51E0B640A1AE68D4BB /* AnalyticsDashboardView.swift */; };
+		EF704445392443E9801A964F /* ReportGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE544E683BC45228CABAC9C /* ReportGenerator.swift */; };
+		C1A00001000000C1 /* AuthModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00001000000C2 /* AuthModels.swift */; };
+		C1A00001000000C3 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00001000000C4 /* AuthService.swift */; };
+		C1A00001000000C5 /* CloudSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00001000000C6 /* CloudSyncService.swift */; };
+		C1A00001000000C7 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A00001000000C8 /* AuthView.swift */; };
+		C1A00001000000D1 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = C1A00001000000D0 /* GoogleSignIn */; };
+		C1A00001000000D3 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = C1A00001000000D2 /* GoogleSignInSwift */; };
+		B1LLAMA00000000B /* gemma-3-1b-it-Q4_K_M.gguf in Resources */ = {isa = PBXBuildFile; fileRef = B1LLAMA00000000A /* gemma-3-1b-it-Q4_K_M.gguf */; };
+		B1LLAMA0000000F1 /* llama.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1LLAMA0000000F0 /* llama.xcframework */; };
+		B1LLAMA0000000F2 /* llama.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B1LLAMA0000000F0 /* llama.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		L10N00000002 /* LocaleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocaleHelper.swift; sourceTree = "<group>"; };
+		L10N00000004 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		B6C31F120363481BB82DF7C2 /* ExerciseModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseModels.swift; sourceTree = "<group>"; };
+		1FD3DD2735664CC981EB96D9 /* WorkoutTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTemplate.swift; sourceTree = "<group>"; };
+		A8606C7C2F334D44863C231C /* ExerciseLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseLibrary.swift; sourceTree = "<group>"; };
+		88D5AE05F31841BD98C9D2C1 /* ExerciseLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExerciseLibraryView.swift; sourceTree = "<group>"; };
+		E072528195634065ADC29FAA /* WorkoutTemplatesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTemplatesView.swift; sourceTree = "<group>"; };
+		FDD132FB0AEC4B72B0C6F08D /* WeightTrendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightTrendsView.swift; sourceTree = "<group>"; };
+		15D89E466068469CA52102F5 /* WeightTrendsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightTrendsViewModel.swift; sourceTree = "<group>"; };
+		55D62AD9B22347EDBDE8FF7D /* WorkoutTemplatesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutTemplatesViewModel.swift; sourceTree = "<group>"; };
 		A1000001238D0000 /* FitPulse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FitPulse.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1000001238D0002 /* FitPulseApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FitPulseApp.swift; sourceTree = "<group>"; };
 		A1000001238D0004 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -123,6 +158,7 @@
 		A1000001238D0069 /* WorkoutPlanGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutPlanGeneratorView.swift; sourceTree = "<group>"; };
 		A1000001238D006B /* LLMService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMService.swift; sourceTree = "<group>"; };
 		A1000001238D006D /* HealthDataParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDataParser.swift; sourceTree = "<group>"; };
+		A1000001238D00D1 /* NutritionDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NutritionDatabase.swift; sourceTree = "<group>"; };
 		A1000001238D006F /* GymViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GymViewModel.swift; sourceTree = "<group>"; };
 		A1000001238D0071 /* LocalLLMService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalLLMService.swift; sourceTree = "<group>"; };
 		A1000001238D0073 /* LlamaContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LlamaContext.swift; sourceTree = "<group>"; };
@@ -149,6 +185,17 @@
 		A1000001238D00B3 /* ChallengeComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeComponents.swift; sourceTree = "<group>"; };
 		A1000001238D00B5 /* EngagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngagementViewModel.swift; sourceTree = "<group>"; };
 		A1000001238D00B7 /* EngagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngagementView.swift; sourceTree = "<group>"; };
+		7062C6A3DDAE47AD8E76774A /* SubscriptionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionManager.swift; sourceTree = "<group>"; };
+		F08D589AB6624BA999ADF9D4 /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		88D44D41302944139A30630A /* AnalyticsDashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsDashboardViewModel.swift; sourceTree = "<group>"; };
+		015FAD51E0B640A1AE68D4BB /* AnalyticsDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsDashboardView.swift; sourceTree = "<group>"; };
+		DDE544E683BC45228CABAC9C /* ReportGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportGenerator.swift; sourceTree = "<group>"; };
+		C1A00001000000C2 /* AuthModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthModels.swift; sourceTree = "<group>"; };
+		C1A00001000000C4 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		C1A00001000000C6 /* CloudSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSyncService.swift; sourceTree = "<group>"; };
+		C1A00001000000C8 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
+		B1LLAMA0000000F0 /* llama.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = llama.xcframework; sourceTree = "<group>"; };
+		B1LLAMA00000000A /* gemma-3-1b-it-Q4_K_M.gguf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "gemma-3-1b-it-Q4_K_M.gguf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,10 +204,27 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1000001238D0045 /* HealthKit.framework in Frameworks */,
+				B1LLAMA0000000F1 /* llama.xcframework in Frameworks */,
+				C1A00001000000D1 /* GoogleSignIn in Frameworks */,
+				C1A00001000000D3 /* GoogleSignInSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B1LLAMA0000000F3 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				B1LLAMA0000000F2 /* llama.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXGroup section */
 		A1000001238DFFF7 = {
@@ -169,6 +233,8 @@
 				A1000001238DFFF8 /* FitPulse */,
 				A1000001238DFFFF /* Products */,
 				A1000001238D0049 /* Frameworks */,
+				B1LLAMA0000000F0 /* llama.xcframework */,
+				B1LLAMA00000000A /* gemma-3-1b-it-Q4_K_M.gguf */,
 			);
 			sourceTree = "<group>";
 		};
@@ -177,6 +243,7 @@
 			children = (
 				A1000001238D0047 /* FitPulse.entitlements */,
 				A1000001238D0048 /* Info.plist */,
+				L10N00000004 /* Localizable.xcstrings */,
 				A1000001238DFFF9 /* Sources */,
 				A1000001238DFFFA /* Resources */,
 			);
@@ -230,10 +297,16 @@
 				A1000001238D0044 /* WeeklyProgressView.swift */,
 				A1000001238D0061 /* GymView.swift */,
 				A1000001238D0063 /* ChatView.swift */,
+				FDD132FB0AEC4B72B0C6F08D /* WeightTrendsView.swift */,
+				E072528195634065ADC29FAA /* WorkoutTemplatesView.swift */,
+				88D5AE05F31841BD98C9D2C1 /* ExerciseLibraryView.swift */,
 				A1000001238D0065 /* ProfileView.swift */,
 				A1000001238D0067 /* GymWorkoutDetailView.swift */,
 				A1000001238D0069 /* WorkoutPlanGeneratorView.swift */,
 				A1000001238D00B7 /* EngagementView.swift */,
+				015FAD51E0B640A1AE68D4BB /* AnalyticsDashboardView.swift */,
+				F08D589AB6624BA999ADF9D4 /* PaywallView.swift */,
+				C1A00001000000C8 /* AuthView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -246,10 +319,13 @@
 				A1000001238D0087 /* HydrationViewModel.swift */,
 				A1000001238D001E /* WorkoutsViewModel.swift */,
 				A1000001238D0020 /* NutritionViewModel.swift */,
+				55D62AD9B22347EDBDE8FF7D /* WorkoutTemplatesViewModel.swift */,
+				15D89E466068469CA52102F5 /* WeightTrendsViewModel.swift */,
 				A1000001238D0022 /* RecoveryViewModel.swift */,
 				A1000001238D0024 /* SettingsViewModel.swift */,
 				A1000001238D006F /* GymViewModel.swift */,
 				A1000001238D00B5 /* EngagementViewModel.swift */,
+				88D44D41302944139A30630A /* AnalyticsDashboardViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -260,7 +336,10 @@
 				A1000001238D0012 /* HealthModels.swift */,
 				A1000001238D0081 /* HydrationModels.swift */,
 				A1000001238D0014 /* UserProfile.swift */,
+				1FD3DD2735664CC981EB96D9 /* WorkoutTemplate.swift */,
+				B6C31F120363481BB82DF7C2 /* ExerciseModels.swift */,
 				A1000001238D00A1 /* EngagementModels.swift */,
+				C1A00001000000C2 /* AuthModels.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -284,7 +363,9 @@
 				A1000001238D003E /* PersistenceController.swift */,
 				A1000001238D0085 /* TrainingNutritionService.swift */,
 				A1000001238D006B /* LLMService.swift */,
+				A8606C7C2F334D44863C231C /* ExerciseLibrary.swift */,
 				A1000001238D006D /* HealthDataParser.swift */,
+				A1000001238D00D1 /* NutritionDatabase.swift */,
 				A1000001238D0071 /* LocalLLMService.swift */,
 				A1000001238D0073 /* LlamaContext.swift */,
 				A1000001238D00A3 /* StreakService.swift */,
@@ -292,6 +373,11 @@
 				A1000001238D00A7 /* NotificationService.swift */,
 				A1000001238D00A9 /* GoalPredictionService.swift */,
 				A1000001238D00AB /* ChallengeService.swift */,
+				DDE544E683BC45228CABAC9C /* ReportGenerator.swift */,
+				7062C6A3DDAE47AD8E76774A /* SubscriptionManager.swift */,
+				C1A00001000000C4 /* AuthService.swift */,
+				C1A00001000000C6 /* CloudSyncService.swift */,
+				L10N00000002 /* LocaleHelper.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -300,6 +386,7 @@
 			isa = PBXGroup;
 			children = (
 				A1000001238D0046 /* HealthKit.framework */,
+				B1LLAMA0000000F0 /* llama.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -346,12 +433,17 @@
 				A1000001238DFFFC1 /* Sources */,
 				A1000001238DFFFD /* Frameworks */,
 				A1000001238DFFFE1 /* Resources */,
+				B1LLAMA0000000F3 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = FitPulse;
+			packageProductDependencies = (
+				C1A00001000000D0 /* GoogleSignIn */,
+				C1A00001000000D2 /* GoogleSignInSwift */,
+			);
 			productName = FitPulse;
 			productReference = A1000001238D0000 /* FitPulse.app */;
 			productType = "com.apple.product-type.application";
@@ -377,12 +469,17 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				es,
+				fr,
 				Base,
 			);
 			mainGroup = A1000001238DFFF7;
 			productRefGroup = A1000001238DFFFF /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
+			packageReferences = (
+				C1A00001000000E0 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+			);
 			targets = (
 				A1000001238DFFFF1 /* FitPulse */,
 			);
@@ -395,6 +492,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1000001238D0005 /* Assets.xcassets in Resources */,
+				B1LLAMA00000000B /* gemma-3-1b-it-Q4_K_M.gguf in Resources */,
+				L10N00000003 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -405,6 +504,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA1ADB364EA9431BA6EA7916 /* ExerciseModels.swift in Sources */,
+				D053C50CAE1B4BAB9B5F2B07 /* WorkoutTemplate.swift in Sources */,
+				EE363289665C4440B4152B34 /* ExerciseLibrary.swift in Sources */,
+				737EAEDD29384867A2F7D2EF /* ExerciseLibraryView.swift in Sources */,
+				51147FF0BAB34B698D769E79 /* WorkoutTemplatesView.swift in Sources */,
+				17614C8684394FE9949CF9B4 /* WeightTrendsView.swift in Sources */,
+				5ED34009F7ED49F5AA39FE3E /* WeightTrendsViewModel.swift in Sources */,
+				0424201D2D474F7CAC86B71A /* WorkoutTemplatesViewModel.swift in Sources */,
 				A1000001238D0001 /* FitPulseApp.swift in Sources */,
 				A1000001238D0003 /* ContentView.swift in Sources */,
 				A1000001238D0007 /* DashboardView.swift in Sources */,
@@ -445,6 +552,7 @@
 				A1000001238D0068 /* WorkoutPlanGeneratorView.swift in Sources */,
 				A1000001238D006A /* LLMService.swift in Sources */,
 				A1000001238D006C /* HealthDataParser.swift in Sources */,
+				A1000001238D00D0 /* NutritionDatabase.swift in Sources */,
 				A1000001238D006E /* GymViewModel.swift in Sources */,
 				A1000001238D0070 /* LocalLLMService.swift in Sources */,
 				A1000001238D0072 /* LlamaContext.swift in Sources */,
@@ -471,6 +579,16 @@
 				A1000001238D00B2 /* ChallengeComponents.swift in Sources */,
 				A1000001238D00B4 /* EngagementViewModel.swift in Sources */,
 				A1000001238D00B6 /* EngagementView.swift in Sources */,
+				EF704445392443E9801A964F /* ReportGenerator.swift in Sources */,
+				9EFD657C58CD40DCAFC4EF7B /* AnalyticsDashboardView.swift in Sources */,
+				98F39FDA69924FF38730CE74 /* AnalyticsDashboardViewModel.swift in Sources */,
+				69B4BC059A254A208A1B71A2 /* PaywallView.swift in Sources */,
+				087A4FCC92CC410D9A74E2C6 /* SubscriptionManager.swift in Sources */,
+				C1A00001000000C1 /* AuthModels.swift in Sources */,
+				C1A00001000000C3 /* AuthService.swift in Sources */,
+				C1A00001000000C5 /* CloudSyncService.swift in Sources */,
+				C1A00001000000C7 /* AuthView.swift in Sources */,
+				L10N00000001 /* LocaleHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -603,6 +721,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = FitPulse/FitPulse.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = GHDDYR5CCV;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"FitPulse/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
@@ -622,7 +741,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.fitpulse.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.anderalvarez.fitpulse;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -637,6 +756,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = FitPulse/FitPulse.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = GHDDYR5CCV;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"FitPulse/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
@@ -656,7 +776,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.fitpulse.app;
+				PRODUCT_BUNDLE_IDENTIFIER = com.anderalvarez.fitpulse;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -686,6 +806,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C1A00001000000E0 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C1A00001000000D0 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C1A00001000000E0 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		C1A00001000000D2 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C1A00001000000E0 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 	};
 	rootObject = A1000001238DFFF8P /* Project object */;

@@ -67,7 +67,7 @@ class HealthDataParser {
         for weeksAgo in 0..<12 {
             // 3-5 workouts per week
             let workoutsThisWeek = Int.random(in: 3...5)
-            let weekStart = calendar.date(byAdding: .weekOfYear, value: -weeksAgo, to: Date())!
+            guard let weekStart = calendar.date(byAdding: .weekOfYear, value: -weeksAgo, to: Date()) else { continue }
 
             for dayOffset in [0, 1, 3, 4, 5].prefix(workoutsThisWeek) {
                 guard let workoutDate = calendar.date(byAdding: .day, value: dayOffset, to: weekStart) else { continue }
@@ -330,4 +330,22 @@ struct ExerciseSet: Identifiable, Codable {
 struct BodyMetrics: Codable {
     let weight: Double
     let height: Double
+}
+
+// MARK: - HealthKit Bridge
+extension GymWorkout {
+    /// Convert a HealthKit Workout to a GymWorkout for display in GymView.
+    /// HealthKit doesn't store individual exercises/sets/reps, so those are empty.
+    init(from workout: Workout) {
+        self.init(
+            id: workout.id,
+            date: workout.date,
+            name: workout.activityType,
+            duration: workout.durationMinutes,
+            calories: workout.activeCalories,
+            exercises: [],
+            averageHeartRate: workout.averageHeartRate,
+            notes: nil
+        )
+    }
 }

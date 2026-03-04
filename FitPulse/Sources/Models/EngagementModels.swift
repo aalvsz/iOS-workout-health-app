@@ -8,6 +8,16 @@ enum StreakType: String, Codable, CaseIterable {
     case steps = "Steps"
     case overall = "Overall"
 
+    var displayName: String {
+        switch self {
+        case .workout: return String(localized: "Workout")
+        case .logging: return String(localized: "Logging")
+        case .hydration: return String(localized: "Hydration")
+        case .steps: return String(localized: "Steps")
+        case .overall: return String(localized: "Overall")
+        }
+    }
+
     var icon: String {
         switch self {
         case .workout: return "flame.fill"
@@ -30,11 +40,11 @@ enum StreakType: String, Codable, CaseIterable {
 
     var description: String {
         switch self {
-        case .workout: return "Complete at least one workout"
-        case .logging: return "Log a meal or weight entry"
-        case .hydration: return "Meet your hydration goal"
-        case .steps: return "Reach your step goal"
-        case .overall: return "Stay active across all areas"
+        case .workout: return String(localized: "Complete at least one workout")
+        case .logging: return String(localized: "Log a meal or weight entry")
+        case .hydration: return String(localized: "Meet your hydration goal")
+        case .steps: return String(localized: "Reach your step goal")
+        case .overall: return String(localized: "Stay active across all areas")
         }
     }
 }
@@ -141,6 +151,15 @@ enum AchievementTier: String, Codable, CaseIterable {
     case gold = "Gold"
     case platinum = "Platinum"
 
+    var displayName: String {
+        switch self {
+        case .bronze: return String(localized: "Bronze")
+        case .silver: return String(localized: "Silver")
+        case .gold: return String(localized: "Gold")
+        case .platinum: return String(localized: "Platinum")
+        }
+    }
+
     var color: String {
         switch self {
         case .bronze: return "tierBronze"
@@ -168,6 +187,17 @@ enum AchievementCategory: String, Codable, CaseIterable {
     case hydration = "Hydration"
     case milestone = "Milestones"
     case challenge = "Challenges"
+
+    var displayName: String {
+        switch self {
+        case .streak: return String(localized: "Streaks")
+        case .workout: return String(localized: "Workouts")
+        case .nutrition: return String(localized: "Nutrition")
+        case .hydration: return String(localized: "Hydration")
+        case .milestone: return String(localized: "Milestones")
+        case .challenge: return String(localized: "Challenges")
+        }
+    }
 
     var icon: String {
         switch self {
@@ -240,6 +270,16 @@ enum ChallengeType: String, Codable, CaseIterable {
     case hydration = "Hydration"
     case logging = "Logging"
 
+    var displayName: String {
+        switch self {
+        case .workout: return String(localized: "Workout")
+        case .steps: return String(localized: "Steps")
+        case .calories: return String(localized: "Calories")
+        case .hydration: return String(localized: "Hydration")
+        case .logging: return String(localized: "Logging")
+        }
+    }
+
     var icon: String {
         switch self {
         case .workout: return "figure.run"
@@ -262,11 +302,11 @@ enum ChallengeType: String, Codable, CaseIterable {
 
     var unit: String {
         switch self {
-        case .workout: return "workouts"
-        case .steps: return "steps"
-        case .calories: return "kcal"
-        case .hydration: return "ml"
-        case .logging: return "days"
+        case .workout: return String(localized: "workouts")
+        case .steps: return String(localized: "steps")
+        case .calories: return String(localized: "kcal")
+        case .hydration: return String(localized: "ml")
+        case .logging: return String(localized: "days")
         }
     }
 }
@@ -356,6 +396,14 @@ enum TrendDirection: String, Codable {
     case improving = "Improving"
     case steady = "Steady"
     case declining = "Declining"
+
+    var displayName: String {
+        switch self {
+        case .improving: return String(localized: "Improving")
+        case .steady: return String(localized: "Steady")
+        case .declining: return String(localized: "Declining")
+        }
+    }
 
     var icon: String {
         switch self {

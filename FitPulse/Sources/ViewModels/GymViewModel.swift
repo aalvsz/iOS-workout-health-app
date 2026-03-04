@@ -12,6 +12,7 @@ class GymViewModel: ObservableObject {
     @Published var error: String?
 
     // MARK: - Dependencies
+    private let healthService = HealthKitService.shared
     private let dataParser = HealthDataParser.shared
     private let llmService = LLMService.shared
     private let persistence = PersistenceController.shared
@@ -41,17 +42,26 @@ class GymViewModel: ObservableObject {
     }
 
     var workoutsPerWeek: Double {
-        guard !allWorkouts.isEmpty else { return 0 }
-        let weeks = max(1, Calendar.current.dateComponents([.weekOfYear], from: allWorkouts.last!.date, to: Date()).weekOfYear ?? 1)
+        guard let earliest = allWorkouts.last else { return 0 }
+        let weeks = max(1, Calendar.current.dateComponents([.weekOfYear], from: earliest.date, to: Date()).weekOfYear ?? 1)
         return Double(allWorkouts.count) / Double(weeks)
     }
 
     // MARK: - Data Loading
     func loadData() async {
         isLoading = true
+        defer { isLoading = false }
 
-        // Load workout history
-        allWorkouts = dataParser.getGymWorkouts()
+        // Load workout history from HealthKit (last 90 days)
+        if let ninetyDaysAgo = Calendar.current.date(byAdding: .day, value: -90, to: Date()) {
+            do {
+                let healthWorkouts = try await healthService.fetchWorkouts(from: ninetyDaysAgo, to: Date())
+                allWorkouts = healthWorkouts.map { GymWorkout(from: $0) }
+            } catch {
+                // HealthKit not authorized or unavailable — continue with empty workouts
+                allWorkouts = []
+            }
+        }
 
         // Load saved plan
         loadSavedPlan()
@@ -59,16 +69,19 @@ class GymViewModel: ObservableObject {
         // Generate insights
         generateInsights()
 
-        // Get next workout suggestion if no plan
-        if currentPlan == nil {
-            await generateNextWorkoutSuggestion()
+        // Use fallback suggestion instead of LLM call during tab load
+        if currentPlan == nil && !recentWorkouts.isEmpty {
+            nextWorkoutSuggestion = generateFallbackSuggestion()
         }
-
-        isLoading = false
     }
 
     // MARK: - Workout Plan
     func generateWorkoutPlan(goal: WorkoutGoal) async {
+        guard SubscriptionManager.shared.canGeneratePlan else {
+            self.error = String(localized: "Free limit reached (3/month). Upgrade to Premium for unlimited plans.")
+            return
+        }
+
         isLoading = true
         error = nil
 
@@ -80,11 +93,31 @@ class GymViewModel: ObservableObject {
             )
             currentPlan = plan
             savePlan(plan)
+            SubscriptionManager.shared.recordPlanGeneration()
         } catch {
             self.error = error.localizedDescription
         }
 
         isLoading = false
+    }
+
+    func previewWorkoutPlan(goal: WorkoutGoal) async throws -> WorkoutPlan {
+        guard SubscriptionManager.shared.canGeneratePlan else {
+            throw NSError(domain: "FitPulse", code: 1, userInfo: [NSLocalizedDescriptionKey: String(localized: "Free limit reached (3/month). Upgrade to Premium for unlimited plans.")])
+        }
+
+        let plan = try await llmService.generateWorkoutPlan(
+            for: goal,
+            profile: profile,
+            recentWorkouts: recentWorkouts
+        )
+        SubscriptionManager.shared.recordPlanGeneration()
+        return plan
+    }
+
+    func acceptPlan(_ plan: WorkoutPlan) {
+        currentPlan = plan
+        savePlan(plan)
     }
 
     private func savePlan(_ plan: WorkoutPlan) {
@@ -175,27 +208,27 @@ class GymViewModel: ObservableObject {
         // Weekly volume trend
         let lastWeekCount = thisWeekWorkouts.count
         let weekBeforeCount = allWorkouts.filter { workout in
-            let twoWeeksAgo = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date().startOfWeek)!
+            guard let twoWeeksAgo = Calendar.current.date(byAdding: .weekOfYear, value: -1, to: Date().startOfWeek) else { return false }
             let oneWeekAgo = Date().startOfWeek
             return workout.date >= twoWeeksAgo && workout.date < oneWeekAgo
         }.count
 
         if lastWeekCount > weekBeforeCount {
-            newInsights.append("Great job! You trained \(lastWeekCount - weekBeforeCount) more times than last week.")
+            newInsights.append(String(localized: "Great job! You trained \(lastWeekCount - weekBeforeCount) more times than last week."))
         } else if lastWeekCount < weekBeforeCount {
-            newInsights.append("You trained \(weekBeforeCount - lastWeekCount) fewer times than last week. Stay consistent!")
+            newInsights.append(String(localized: "You trained \(weekBeforeCount - lastWeekCount) fewer times than last week. Stay consistent!"))
         }
 
         // Average duration insight
         if averageWorkoutDuration > 0 {
-            newInsights.append("Your average workout is \(Int(averageWorkoutDuration)) minutes. Ideal range is 45-90 minutes.")
+            newInsights.append(String(localized: "Your average workout is \(Int(averageWorkoutDuration)) minutes. Ideal range is 45-90 minutes."))
         }
 
         // Consistency insight
         if workoutsPerWeek >= 4 {
-            newInsights.append("Excellent consistency! \(String(format: "%.1f", workoutsPerWeek)) workouts per week is great for progress.")
+            newInsights.append(String(localized: "Excellent consistency! \(String(format: "%.1f", workoutsPerWeek)) workouts per week is great for progress."))
         } else if workoutsPerWeek >= 3 {
-            newInsights.append("Good frequency at \(String(format: "%.1f", workoutsPerWeek)) workouts/week. Consider adding one more session.")
+            newInsights.append(String(localized: "Good frequency at \(String(format: "%.1f", workoutsPerWeek)) workouts/week. Consider adding one more session."))
         }
 
         insights = newInsights

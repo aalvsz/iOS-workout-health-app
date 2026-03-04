@@ -14,7 +14,7 @@ struct RecoveryView: View {
                     }
 
                     // Time Range Picker
-                    Picker("Time Range", selection: $viewModel.selectedTimeRange) {
+                    Picker(String(localized: "Time Range"), selection: $viewModel.selectedTimeRange) {
                         ForEach(RecoveryViewModel.TimeRange.allCases, id: \.self) { range in
                             Text(range.rawValue).tag(range)
                         }
@@ -33,31 +33,31 @@ struct RecoveryView: View {
                         GridItem(.flexible())
                     ], spacing: 16) {
                         RecoveryMetricCard(
-                            title: "HRV",
+                            title: String(localized: "HRV"),
                             value: viewModel.currentHRV.formattedHRV,
-                            average: "Avg: \(viewModel.averageHRV.formatted0) ms",
+                            average: String(localized: "Avg: \(viewModel.averageHRV.formatted0) ms"),
                             icon: "waveform.path.ecg",
                             color: .green
                         )
 
                         RecoveryMetricCard(
-                            title: "Resting HR",
+                            title: String(localized: "Resting HR"),
                             value: viewModel.currentRestingHR.formattedHeartRate,
-                            average: "Avg: \(viewModel.averageRestingHR.formatted0) bpm",
+                            average: String(localized: "Avg: \(viewModel.averageRestingHR.formatted0) bpm"),
                             icon: "heart.fill",
                             color: .red
                         )
 
                         RecoveryMetricCard(
-                            title: "Sleep",
+                            title: String(localized: "Sleep"),
                             value: viewModel.currentSleep.formattedHours,
-                            average: "Avg: \(viewModel.averageSleep.formatted1)h",
+                            average: String(localized: "Avg: \(viewModel.averageSleep.formatted1)h"),
                             icon: "bed.double.fill",
                             color: .indigo
                         )
 
                         RecoveryMetricCard(
-                            title: "Trend",
+                            title: String(localized: "Trend"),
                             value: viewModel.recoveryTrend >= 0 ? "+" : "",
                             average: "\(viewModel.recoveryTrend.formatted1)%",
                             icon: viewModel.recoveryTrend >= 0 ? "arrow.up.right" : "arrow.down.right",
@@ -68,7 +68,7 @@ struct RecoveryView: View {
                     // HRV Chart
                     if !viewModel.hrvChartData.isEmpty {
                         MetricTrendCard(
-                            title: "Heart Rate Variability",
+                            title: String(localized: "Heart Rate Variability"),
                             data: viewModel.hrvChartData,
                             color: .green,
                             unit: "ms"
@@ -78,7 +78,7 @@ struct RecoveryView: View {
                     // Sleep Chart
                     if !viewModel.sleepChartData.isEmpty {
                         MetricTrendCard(
-                            title: "Sleep Duration",
+                            title: String(localized: "Sleep Duration"),
                             data: viewModel.sleepChartData,
                             color: .indigo,
                             unit: "hours"
@@ -103,7 +103,7 @@ struct RecoveryView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Recovery")
+            .navigationTitle(String(localized: "Recovery"))
             .refreshable {
                 await viewModel.refreshData()
             }
@@ -130,7 +130,7 @@ struct TodayRecoveryCard: View {
         VStack(spacing: 20) {
             HStack {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Today's Recovery")
+                    Text(String(localized: "Today's Recovery"))
                         .font(.headline)
                         .foregroundStyle(.secondary)
 
@@ -139,7 +139,7 @@ struct TodayRecoveryCard: View {
                             .font(.system(size: 56, weight: .bold, design: .rounded))
 
                         VStack(alignment: .leading) {
-                            Text("/ 100")
+                            Text(String(localized: "/ 100"))
                                 .font(.title3)
                                 .foregroundStyle(.secondary)
 
@@ -188,7 +188,7 @@ struct TodayRecoveryCard: View {
             // Contributing Factors
             if !analysis.factors.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Contributing Factors")
+                    Text(String(localized: "Contributing Factors"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
@@ -239,7 +239,7 @@ struct RecoveryTrendCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Recovery Trend")
+            Text(String(localized: "Recovery Trend"))
                 .font(.headline)
 
             Chart(data) { point in
@@ -366,12 +366,12 @@ struct RecoveryFlagsCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Recent Alerts")
+                Text(String(localized: "Recent Alerts"))
                     .font(.headline)
 
                 Spacer()
 
-                Text("\(flags.count) this week")
+                Text(String(localized: "\(flags.count) this week"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -383,7 +383,7 @@ struct RecoveryFlagsCard: View {
                         .frame(width: 24)
 
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(flag.type.rawValue)
+                        Text(flag.type.displayName)
                             .font(.subheadline)
 
                         Text(flag.date.relativeDescription)
@@ -423,13 +423,13 @@ struct RecommendationsCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Recommendations")
+            Text(String(localized: "Recommendations"))
                 .font(.headline)
 
             VStack(alignment: .leading, spacing: 12) {
                 RecommendationRow(
                     icon: "figure.run",
-                    title: "Workout",
+                    title: String(localized: "Workout"),
                     text: workoutRec,
                     color: .blue
                 )
@@ -438,7 +438,7 @@ struct RecommendationsCard: View {
 
                 RecommendationRow(
                     icon: "bed.double.fill",
-                    title: "Sleep",
+                    title: String(localized: "Sleep"),
                     text: sleepRec,
                     color: .indigo
                 )
@@ -481,7 +481,7 @@ struct RecoveryInsightsCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Insights")
+            Text(String(localized: "Insights"))
                 .font(.headline)
 
             ForEach(insights.filter { $0.type == .recovery || $0.type == .sleep }) { insight in

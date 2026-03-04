@@ -368,11 +368,31 @@ class HealthKitService: ObservableObject {
         }
     }
 
-    func fetchRecentWorkouts(limit: Int = 10) async throws -> [Workout] {
+    func fetchRecentWorkouts(limit: Int = 50) async throws -> [Workout] {
         let endDate = Date()
-        let startDate = Calendar.current.date(byAdding: .day, value: -30, to: endDate)!
+        guard let startDate = Calendar.current.date(byAdding: .day, value: -90, to: endDate) else { return [] }
         let allWorkouts = try await fetchWorkouts(from: startDate, to: endDate)
         return Array(allWorkouts.prefix(limit))
+    }
+
+    /// Force-refresh all health data. Called from ProfileView's "Sync with Apple Health" button.
+    func syncAllHealthData() async {
+        guard !isSyncing else { return }
+        isSyncing = true
+
+        do {
+            let summary = try await fetchDailySummary(for: Date())
+            todaySummary = summary
+            lastSyncDate = Date()
+
+            PersistenceController.shared.cacheDailySummary(summary)
+            NotificationCenter.default.post(name: .healthDataDidUpdate, object: summary)
+        } catch {
+            print("Full health sync error: \(error.localizedDescription)")
+            lastSyncDate = Date()
+        }
+
+        isSyncing = false
     }
 
     // MARK: - Weight

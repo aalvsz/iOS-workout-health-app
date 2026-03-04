@@ -1,17 +1,25 @@
 import SwiftUI
 import UserNotifications
+import CloudKit
+import GoogleSignIn
 
 @main
 struct FitPulseApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var profile = UserProfile.load()
     @StateObject private var healthService = HealthKitService.shared
+    @StateObject private var subscriptionManager = SubscriptionManager.shared
+    @StateObject private var authService = AuthService.shared
+    @StateObject private var syncService = CloudSyncService.shared
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(profile)
                 .environmentObject(healthService)
+                .environmentObject(subscriptionManager)
+                .environmentObject(authService)
+                .environmentObject(syncService)
                 .preferredColorScheme(profile.prefersDarkMode ? .dark : nil)
                 .onAppear {
                     setupServices()
@@ -29,9 +37,22 @@ struct FitPulseApp: App {
             await NotificationService.shared.setupDefaultNotifications()
         }
 
-        // Auto-load Llama 1B model
+        // Auto-load Gemma 3 1B model
         Task {
-            await LocalLLMService.shared.autoLoadLlama1BModel()
+            await LocalLLMService.shared.autoLoadModel()
+        }
+
+        // Check subscription entitlement
+        Task {
+            await subscriptionManager.checkEntitlement()
+        }
+
+        // Auth + Cloud Sync
+        Task {
+            if authService.isSignedIn {
+                await authService.checkAppleCredentialState()
+                await syncService.pullRemoteChanges()
+            }
         }
     }
 }
@@ -50,5 +71,14 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         NotificationService.shared.registerNotificationCategories()
 
         return true
+    }
+
+    func application(
+        _ application: UIApplication,
+        open url: URL,
+        options: [UIApplication.OpenURLOptionsKey: Any] = [:]
+    ) -> Bool {
+        // Handle Google Sign-In URL callback
+        return GIDSignIn.sharedInstance.handle(url)
     }
 }

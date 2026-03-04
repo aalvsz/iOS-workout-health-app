@@ -47,7 +47,7 @@ struct OnboardingView: View {
             // Navigation Buttons
             HStack {
                 if currentPage > 0 {
-                    Button("Back") {
+                    Button(String(localized: "Back")) {
                         withAnimation {
                             currentPage -= 1
                         }
@@ -63,7 +63,7 @@ struct OnboardingView: View {
                             currentPage += 1
                         }
                     }) {
-                        Text("Continue")
+                        Text(String(localized: "Continue"))
                             .fontWeight(.semibold)
                             .foregroundStyle(.white)
                             .padding(.horizontal, 32)
@@ -154,10 +154,10 @@ struct WelcomePage: View {
                 .font(.system(size: 80))
                 .foregroundStyle(.blue)
 
-            Text("Welcome to FitPulse")
+            Text(String(localized: "Welcome to FitPulse"))
                 .font(.largeTitle.bold())
 
-            Text("Your intelligent fitness companion that adapts to your body's signals")
+            Text(String(localized: "Your intelligent fitness companion that adapts to your body's signals"))
                 .font(.title3)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -166,9 +166,9 @@ struct WelcomePage: View {
             Spacer()
 
             VStack(spacing: 16) {
-                FeatureRow(icon: "heart.fill", title: "Recovery Tracking", description: "Know when to push and when to rest")
-                FeatureRow(icon: "fork.knife", title: "Smart Nutrition", description: "Personalized meal plans based on your activity")
-                FeatureRow(icon: "chart.line.uptrend.xyaxis", title: "Insights", description: "Understand your body's patterns")
+                FeatureRow(icon: "heart.fill", title: String(localized: "Recovery Tracking"), description: String(localized: "Know when to push and when to rest"))
+                FeatureRow(icon: "fork.knife", title: String(localized: "Smart Nutrition"), description: String(localized: "Personalized meal plans based on your activity"))
+                FeatureRow(icon: "chart.line.uptrend.xyaxis", title: String(localized: "Insights"), description: String(localized: "Understand your body's patterns"))
             }
             .padding(.horizontal, 24)
 
@@ -209,25 +209,25 @@ struct ProfileSetupPage: View {
 
     var body: some View {
         VStack(spacing: 24) {
-            Text("About You")
+            Text(String(localized: "About You"))
                 .font(.largeTitle.bold())
 
-            Text("Let's personalize your experience")
+            Text(String(localized: "Let's personalize your experience"))
                 .foregroundStyle(.secondary)
 
             VStack(spacing: 20) {
-                TextField("Your name", text: $viewModel.name)
+                TextField(String(localized: "Your name"), text: $viewModel.name)
                     .textFieldStyle(.roundedBorder)
                     .font(.title3)
 
-                Picker("Sex", selection: $viewModel.sex) {
-                    Text("Male").tag(UserProfile.Sex.male)
-                    Text("Female").tag(UserProfile.Sex.female)
+                Picker(String(localized: "Sex"), selection: $viewModel.sex) {
+                    Text(UserProfile.Sex.male.displayName).tag(UserProfile.Sex.male)
+                    Text(UserProfile.Sex.female.displayName).tag(UserProfile.Sex.female)
                 }
                 .pickerStyle(.segmented)
 
                 VStack(alignment: .leading) {
-                    Text("Age: \(viewModel.age)")
+                    Text(String(localized: "Age: \(viewModel.age)"))
                         .font(.headline)
                     Slider(value: Binding(
                         get: { Double(viewModel.age) },
@@ -236,13 +236,13 @@ struct ProfileSetupPage: View {
                 }
 
                 VStack(alignment: .leading) {
-                    Text("Weight: \(viewModel.weightKg, specifier: "%.1f") kg")
+                    Text(String(localized: "Weight: \(viewModel.weightKg, specifier: "%.1f") kg"))
                         .font(.headline)
                     Slider(value: $viewModel.weightKg, in: 30...200, step: 0.5)
                 }
 
                 VStack(alignment: .leading) {
-                    Text("Height: \(Int(viewModel.heightCm)) cm")
+                    Text(String(localized: "Height: \(Int(viewModel.heightCm)) cm"))
                         .font(.headline)
                     Slider(value: $viewModel.heightCm, in: 100...220, step: 1)
                 }
@@ -261,10 +261,10 @@ struct GoalsPage: View {
 
     var body: some View {
         VStack(spacing: 24) {
-            Text("Your Goal")
+            Text(String(localized: "Your Goal"))
                 .font(.largeTitle.bold())
 
-            Text("What do you want to achieve?")
+            Text(String(localized: "What do you want to achieve?"))
                 .foregroundStyle(.secondary)
 
             VStack(spacing: 12) {
@@ -281,12 +281,12 @@ struct GoalsPage: View {
             Spacer()
 
             VStack(alignment: .leading) {
-                Text("Activity Level")
+                Text(String(localized: "Activity Level"))
                     .font(.headline)
 
-                Picker("Activity Level", selection: $viewModel.activityLevel) {
+                Picker(String(localized: "Activity Level"), selection: $viewModel.activityLevel) {
                     ForEach(UserProfile.ActivityLevel.allCases, id: \.self) { level in
-                        Text(level.rawValue).tag(level)
+                        Text(level.displayName).tag(level)
                     }
                 }
                 .pickerStyle(.wheel)
@@ -313,7 +313,7 @@ struct GoalOptionCard: View {
                     .foregroundStyle(isSelected ? .white : .blue)
                     .frame(width: 40)
 
-                Text(goal.rawValue)
+                Text(goal.displayName)
                     .font(.headline)
                     .foregroundStyle(isSelected ? .white : .primary)
 
@@ -337,19 +337,19 @@ struct NutritionSetupPage: View {
 
     var body: some View {
         VStack(spacing: 24) {
-            Text("Nutrition Setup")
+            Text(String(localized: "Nutrition Setup"))
                 .font(.largeTitle.bold())
 
-            Text("Fine-tune your targets")
+            Text(String(localized: "Fine-tune your targets"))
                 .foregroundStyle(.secondary)
 
             VStack(spacing: 20) {
                 VStack(alignment: .leading) {
                     HStack {
-                        Text("Caloric Deficit")
+                        Text(String(localized: "Caloric Deficit"))
                             .font(.headline)
                         Spacer()
-                        Text("\(Int(viewModel.deficitPercentage * 100))%")
+                        Text(String(localized: "\(Int(viewModel.deficitPercentage * 100))%"))
                             .foregroundStyle(.secondary)
                     }
                     Slider(value: $viewModel.deficitPercentage, in: 0...0.30, step: 0.05)
@@ -363,15 +363,15 @@ struct NutritionSetupPage: View {
 
                 VStack(alignment: .leading) {
                     HStack {
-                        Text("Protein")
+                        Text(String(localized: "Protein"))
                             .font(.headline)
                         Spacer()
-                        Text("\(viewModel.proteinPerKg, specifier: "%.1f") g/kg")
+                        Text(String(localized: "\(viewModel.proteinPerKg, specifier: "%.1f") g/kg"))
                             .foregroundStyle(.secondary)
                     }
                     Slider(value: $viewModel.proteinPerKg, in: 1.2...2.5, step: 0.1)
 
-                    Text("Recommended: \(viewModel.fitnessGoal.proteinRecommendation.lowerBound, specifier: "%.1f")-\(viewModel.fitnessGoal.proteinRecommendation.upperBound, specifier: "%.1f") g/kg for your goal")
+                    Text(String(localized: "Recommended: \(viewModel.fitnessGoal.proteinRecommendation.lowerBound, specifier: "%.1f")-\(viewModel.fitnessGoal.proteinRecommendation.upperBound, specifier: "%.1f") g/kg for your goal"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -382,23 +382,23 @@ struct NutritionSetupPage: View {
 
             // Preview
             VStack(spacing: 8) {
-                Text("Your Daily Targets")
+                Text(String(localized: "Your Daily Targets"))
                     .font(.headline)
 
                 HStack(spacing: 24) {
                     VStack {
                         Text("\(Int(viewModel.targetCalories))")
                             .font(.title.bold())
-                        Text("Calories")
+                        Text(String(localized: "Calories"))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
 
                     VStack {
-                        Text("\(Int(viewModel.weightKg * viewModel.proteinPerKg))g")
+                        Text(String(localized: "\(Int(viewModel.weightKg * viewModel.proteinPerKg))g"))
                             .font(.title.bold())
                             .foregroundStyle(.blue)
-                        Text("Protein")
+                        Text(String(localized: "Protein"))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -416,10 +416,10 @@ struct NutritionSetupPage: View {
 
     private var deficitDescription: String {
         switch viewModel.deficitPercentage {
-        case 0: return "Maintenance - no weight change"
-        case 0.01..<0.15: return "Mild deficit - slow, sustainable loss"
-        case 0.15..<0.25: return "Moderate deficit - steady progress"
-        default: return "Aggressive - faster results but harder to maintain"
+        case 0: return String(localized: "Maintenance - no weight change")
+        case 0.01..<0.15: return String(localized: "Mild deficit - slow, sustainable loss")
+        case 0.15..<0.25: return String(localized: "Moderate deficit - steady progress")
+        default: return String(localized: "Aggressive - faster results but harder to maintain")
         }
     }
 }
@@ -436,10 +436,10 @@ struct HealthKitPage: View {
                 .font(.system(size: 80))
                 .foregroundStyle(.red)
 
-            Text("Connect Apple Health")
+            Text(String(localized: "Connect Apple Health"))
                 .font(.largeTitle.bold())
 
-            Text("FitPulse works best when connected to Apple Health for automatic tracking of your workouts, heart rate, sleep, and more.")
+            Text(String(localized: "FitPulse works best when connected to Apple Health for automatic tracking of your workouts, heart rate, sleep, and more."))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 32)
@@ -450,7 +450,7 @@ struct HealthKitPage: View {
                 HStack {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundStyle(.green)
-                    Text("Connected!")
+                    Text(String(localized: "Connected!"))
                         .font(.headline)
                 }
                 .padding()
@@ -464,7 +464,7 @@ struct HealthKitPage: View {
                 }) {
                     HStack {
                         Image(systemName: "heart.fill")
-                        Text("Connect Health")
+                        Text(String(localized: "Connect Health"))
                     }
                     .font(.headline)
                     .foregroundStyle(.white)
@@ -476,7 +476,7 @@ struct HealthKitPage: View {
                 .padding(.horizontal, 24)
             }
 
-            Text("You can skip this step and connect later in Settings")
+            Text(String(localized: "You can skip this step and connect later in Settings"))
                 .font(.caption)
                 .foregroundStyle(.tertiary)
 
@@ -498,19 +498,19 @@ struct CompletionPage: View {
                 .font(.system(size: 80))
                 .foregroundStyle(.green)
 
-            Text("You're All Set!")
+            Text(String(localized: "You're All Set!"))
                 .font(.largeTitle.bold())
 
-            Text("Welcome aboard, \(viewModel.name.isEmpty ? "friend" : viewModel.name)!")
+            Text(String(localized: "Welcome aboard, \(viewModel.name.isEmpty ? String(localized: "friend") : viewModel.name)!"))
                 .font(.title3)
                 .foregroundStyle(.secondary)
 
             Spacer()
 
             VStack(spacing: 16) {
-                SummaryRow(label: "Daily Calories", value: "\(Int(viewModel.targetCalories)) kcal")
-                SummaryRow(label: "Protein Target", value: "\(Int(viewModel.weightKg * viewModel.proteinPerKg))g")
-                SummaryRow(label: "Goal", value: viewModel.fitnessGoal.rawValue)
+                SummaryRow(label: String(localized: "Daily Calories"), value: String(localized: "\(Int(viewModel.targetCalories)) kcal"))
+                SummaryRow(label: String(localized: "Protein Target"), value: String(localized: "\(Int(viewModel.weightKg * viewModel.proteinPerKg))g"))
+                SummaryRow(label: String(localized: "Goal"), value: viewModel.fitnessGoal.displayName)
             }
             .padding()
             .background(.ultraThinMaterial)
@@ -520,7 +520,7 @@ struct CompletionPage: View {
             Spacer()
 
             Button(action: onComplete) {
-                Text("Let's Go!")
+                Text(String(localized: "Let's Go!"))
                     .font(.headline)
                     .foregroundStyle(.white)
                     .padding()

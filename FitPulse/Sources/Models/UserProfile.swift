@@ -26,6 +26,13 @@ class UserProfile: ObservableObject, Codable {
         case male = "Male"
         case female = "Female"
 
+        var displayName: String {
+            switch self {
+            case .male: return String(localized: "Male")
+            case .female: return String(localized: "Female")
+            }
+        }
+
         var bmrConstant: Double {
             switch self {
             case .male: return 5
@@ -51,6 +58,26 @@ class UserProfile: ObservableObject, Codable {
             }
         }
 
+        var displayName: String {
+            switch self {
+            case .sedentary: return String(localized: "Sedentary")
+            case .lightlyActive: return String(localized: "Lightly Active")
+            case .moderatelyActive: return String(localized: "Moderately Active")
+            case .veryActive: return String(localized: "Very Active")
+            case .extraActive: return String(localized: "Extra Active")
+            }
+        }
+
+        var localizedDescription: String {
+            switch self {
+            case .sedentary: return String(localized: "Little to no exercise")
+            case .lightlyActive: return String(localized: "Light exercise 1-3 days/week")
+            case .moderatelyActive: return String(localized: "Moderate exercise 3-5 days/week")
+            case .veryActive: return String(localized: "Hard exercise 6-7 days/week")
+            case .extraActive: return String(localized: "Very hard exercise & physical job")
+            }
+        }
+
         var description: String {
             switch self {
             case .sedentary: return "Little to no exercise"
@@ -68,6 +95,16 @@ class UserProfile: ObservableObject, Codable {
         case gainMuscle = "Build Muscle"
         case recomp = "Body Recomposition"
         case performance = "Improve Performance"
+
+        var displayName: String {
+            switch self {
+            case .loseWeight: return String(localized: "Lose Weight")
+            case .maintain: return String(localized: "Maintain Weight")
+            case .gainMuscle: return String(localized: "Build Muscle")
+            case .recomp: return String(localized: "Body Recomposition")
+            case .performance: return String(localized: "Improve Performance")
+            }
+        }
 
         var icon: String {
             switch self {
@@ -200,10 +237,10 @@ class UserProfile: ObservableObject, Codable {
 
     var bmiCategory: String {
         switch bmi {
-        case ..<18.5: return "Underweight"
-        case 18.5..<25: return "Normal"
-        case 25..<30: return "Overweight"
-        default: return "Obese"
+        case ..<18.5: return String(localized: "Underweight")
+        case 18.5..<25: return String(localized: "Normal")
+        case 25..<30: return String(localized: "Overweight")
+        default: return String(localized: "Obese")
         }
     }
 
@@ -222,6 +259,11 @@ class UserProfile: ObservableObject, Codable {
     func save() {
         if let encoded = try? JSONEncoder().encode(self) {
             UserDefaults.standard.set(encoded, forKey: Self.userDefaultsKey)
+        }
+        let profileID = id.uuidString
+        Task { @MainActor in
+            guard AuthService.shared.isSignedIn else { return }
+            try? await CloudSyncService.shared.pushRecord(type: "UserProfile", id: profileID)
         }
     }
 

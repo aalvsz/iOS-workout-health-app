@@ -137,11 +137,13 @@ class NutritionViewModel: ObservableObject {
     // MARK: - Meal Planning
     func generateMealPlan() {
         guard let targets = targets else { return }
+        guard SubscriptionManager.shared.canGeneratePlan else { return }
 
         mealPlan = mealPlanner.generateDayPlan(for: targets)
 
         if let plan = mealPlan {
             persistence.saveMealPlan(plan)
+            SubscriptionManager.shared.recordPlanGeneration()
         }
     }
 

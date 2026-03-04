@@ -173,7 +173,7 @@ class DashboardViewModel: ObservableObject {
         // Recovery insight
         if let recovery = recoveryAnalysis {
             newInsights.append(Insight(
-                title: "Recovery: \(recovery.status.rawValue)",
+                title: String(localized: "Recovery: \(recovery.status.rawValue)"),
                 description: recovery.status.recommendation,
                 type: .recovery,
                 priority: recovery.status == .critical ? .critical : .medium
@@ -181,8 +181,8 @@ class DashboardViewModel: ObservableObject {
 
             if recovery.isAnomaly, let reason = recovery.anomalyReason {
                 newInsights.append(Insight(
-                    title: "Unusual Pattern",
-                    description: "Today shows unusual values: \(reason)",
+                    title: String(localized: "Unusual Pattern"),
+                    description: String(localized: "Today shows unusual values: \(reason)"),
                     type: .anomaly,
                     priority: .high
                 ))
@@ -192,15 +192,15 @@ class DashboardViewModel: ObservableObject {
         // Workout streak insight
         if weeklyWorkoutCount >= profile.weeklyWorkoutGoal {
             newInsights.append(Insight(
-                title: "Weekly Goal Achieved!",
-                description: "You've hit your \(profile.weeklyWorkoutGoal) workout goal this week.",
+                title: String(localized: "Weekly Goal Achieved!"),
+                description: String(localized: "You've hit your \(profile.weeklyWorkoutGoal) workout goal this week."),
                 type: .workout,
                 priority: .low
             ))
         } else if weeklyWorkoutCount == profile.weeklyWorkoutGoal - 1 {
             newInsights.append(Insight(
-                title: "Almost There!",
-                description: "One more workout to hit your weekly goal.",
+                title: String(localized: "Almost There!"),
+                description: String(localized: "One more workout to hit your weekly goal."),
                 type: .workout,
                 priority: .medium,
                 actionable: true,
@@ -212,8 +212,8 @@ class DashboardViewModel: ObservableObject {
         if let today = todaySummary {
             if today.sleepHours < profile.sleepGoalHours - 1 {
                 newInsights.append(Insight(
-                    title: "Sleep Deficit",
-                    description: "You slept \(today.sleepHours.formatted1)h, below your \(profile.sleepGoalHours.formatted0)h goal.",
+                    title: String(localized: "Sleep Deficit"),
+                    description: String(localized: "You slept \(today.sleepHours.formatted1)h, below your \(profile.sleepGoalHours.formatted0)h goal."),
                     type: .sleep,
                     priority: .medium
                 ))
@@ -223,8 +223,8 @@ class DashboardViewModel: ObservableObject {
             let stepsRemaining = profile.dailyStepsGoal - today.steps
             if stepsRemaining > 0 && stepsRemaining < 3000 {
                 newInsights.append(Insight(
-                    title: "\(stepsRemaining.formattedSteps) Steps to Go",
-                    description: "A short walk could help you reach your daily goal!",
+                    title: String(localized: "\(stepsRemaining.formattedSteps) Steps to Go"),
+                    description: String(localized: "A short walk could help you reach your daily goal!"),
                     type: .workout,
                     priority: .low,
                     actionable: true,
@@ -245,7 +245,7 @@ class DashboardViewModel: ObservableObject {
             persistence.saveProfile(updatedProfile)
             calculateNutritionTargets()
         } catch {
-            self.error = "Failed to save weight: \(error.localizedDescription)"
+            self.error = String(localized: "Failed to save weight: \(error.localizedDescription)")
         }
     }
 }

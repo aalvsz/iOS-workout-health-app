@@ -75,7 +75,7 @@ extension Date {
     }
 
     var endOfDay: Date {
-        Calendar.current.date(byAdding: .day, value: 1, to: startOfDay)!.addingTimeInterval(-1)
+        (Calendar.current.date(byAdding: .day, value: 1, to: startOfDay) ?? startOfDay).addingTimeInterval(-1)
     }
 
     var startOfWeek: Date {

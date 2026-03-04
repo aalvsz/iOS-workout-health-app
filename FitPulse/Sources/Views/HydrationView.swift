@@ -46,7 +46,7 @@ struct HydrationView: View {
                 }
                 .padding()
             }
-            .navigationTitle("Hydration")
+            .navigationTitle(String(localized: "Hydration"))
             .refreshable {
                 await viewModel.refreshData()
             }
@@ -84,14 +84,14 @@ struct HydrationProgressCard: View {
     var body: some View {
         VStack(spacing: 20) {
             HStack {
-                Text("Today's Hydration")
+                Text(String(localized: "Today's Hydration"))
                     .font(.headline)
 
                 Spacer()
 
                 HStack(spacing: 4) {
                     Image(systemName: status.icon)
-                    Text(status.rawValue)
+                    Text(status.displayName)
                 }
                 .font(.caption)
                 .foregroundStyle(statusColor)
@@ -129,7 +129,7 @@ struct HydrationProgressCard: View {
 
                 VStack(alignment: .leading, spacing: 16) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Progress")
+                        Text(String(localized: "Progress"))
                             .font(.caption)
                             .foregroundStyle(.secondary)
 
@@ -139,7 +139,7 @@ struct HydrationProgressCard: View {
                     }
 
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Remaining")
+                        Text(String(localized: "Remaining"))
                             .font(.caption)
                             .foregroundStyle(.secondary)
 
@@ -181,16 +181,16 @@ struct QuickAddCard: View {
     var body: some View {
         VStack(spacing: 16) {
             HStack {
-                Text("Quick Add")
+                Text(String(localized: "Quick Add"))
                     .font(.headline)
 
                 Spacer()
 
-                Picker("Source", selection: $selectedSource) {
+                Picker(String(localized: "Source"), selection: $selectedSource) {
                     ForEach(HydrationSource.allCases, id: \.self) { source in
                         HStack {
                             Image(systemName: source.icon)
-                            Text(source.rawValue)
+                            Text(source.displayName)
                         }
                         .tag(source)
                     }
@@ -201,24 +201,24 @@ struct QuickAddCard: View {
             HStack(spacing: 12) {
                 QuickAddButton(
                     icon: "drop.fill",
-                    amount: "250ml",
-                    label: "Glass",
+                    amount: String(localized: "250ml"),
+                    label: String(localized: "Glass"),
                     color: .blue,
                     action: onGlass
                 )
 
                 QuickAddButton(
                     icon: "waterbottle.fill",
-                    amount: "500ml",
-                    label: "Bottle",
+                    amount: String(localized: "500ml"),
+                    label: String(localized: "Bottle"),
                     color: .cyan,
                     action: onBottle
                 )
 
                 QuickAddButton(
                     icon: "plus.circle.fill",
-                    amount: "Custom",
-                    label: "Amount",
+                    amount: String(localized: "Custom"),
+                    label: String(localized: "Amount"),
                     color: .purple,
                     action: onCustom
                 )
@@ -268,12 +268,12 @@ struct TodayLogCard: View {
     var body: some View {
         VStack(spacing: 12) {
             HStack {
-                Text("Today's Log")
+                Text(String(localized: "Today's Log"))
                     .font(.headline)
 
                 Spacer()
 
-                Text("\(entries.count) entries")
+                Text(String(localized: "\(entries.count) entries"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -286,7 +286,7 @@ struct TodayLogCard: View {
                         .frame(width: 30)
 
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(entry.source.rawValue)
+                        Text(entry.source.displayName)
                             .font(.subheadline)
 
                         Text(formatTime(entry.date))
@@ -296,7 +296,7 @@ struct TodayLogCard: View {
 
                     Spacer()
 
-                    Text("\(entry.amountMl)ml")
+                    Text(String(localized: "\(entry.amountMl)ml"))
                         .font(.subheadline.bold())
 
                     Button(action: { onDelete(entry) }) {
@@ -335,7 +335,7 @@ struct WeeklyHydrationCard: View {
     var body: some View {
         VStack(spacing: 16) {
             HStack {
-                Text("This Week")
+                Text(String(localized: "This Week"))
                     .font(.headline)
 
                 Spacer()
@@ -344,7 +344,7 @@ struct WeeklyHydrationCard: View {
                     sum + (day.goal > 0 ? Double(day.intake) / Double(day.goal) : 0)
                 } / Double(max(1, progress.count))
 
-                Text("\(Int(avgProgress * 100))% avg")
+                Text(String(localized: "\(Int(avgProgress * 100))% avg"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -391,7 +391,7 @@ struct HydrationTipCard: View {
                 Image(systemName: "lightbulb.fill")
                     .foregroundStyle(.yellow)
 
-                Text("Tip")
+                Text(String(localized: "Tip"))
                     .font(.headline)
 
                 Spacer()
@@ -426,14 +426,14 @@ struct CustomHydrationSheet: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 24) {
-                Text("Log Hydration")
+                Text(String(localized: "Log Hydration"))
                     .font(.title2.bold())
 
                 VStack(spacing: 8) {
                     Text("\(Int(amount))")
                         .font(.system(size: 56, weight: .bold, design: .rounded))
 
-                    Text("milliliters")
+                    Text(String(localized: "milliliters"))
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -450,11 +450,11 @@ struct CustomHydrationSheet: View {
                     }
                 }
 
-                Picker("Source", selection: $source) {
+                Picker(String(localized: "Source"), selection: $source) {
                     ForEach(HydrationSource.allCases, id: \.self) { src in
                         HStack {
                             Image(systemName: src.icon)
-                            Text(src.rawValue)
+                            Text(src.displayName)
                         }
                         .tag(src)
                     }
@@ -470,7 +470,7 @@ struct CustomHydrationSheet: View {
                 }) {
                     HStack {
                         Image(systemName: "drop.fill")
-                        Text("Log \(Int(amount))ml")
+                        Text(String(localized: "Log \(Int(amount))ml"))
                     }
                     .font(.headline)
                     .frame(maxWidth: .infinity)
@@ -484,7 +484,7 @@ struct CustomHydrationSheet: View {
             .padding()
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Cancel") {
+                    Button(String(localized: "Cancel")) {
                         dismiss()
                     }
                 }

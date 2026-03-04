@@ -33,7 +33,7 @@ struct GymWorkoutDetailView: View {
                     HStack(spacing: 0) {
                         WorkoutStatBlock(
                             value: workout.formattedDuration,
-                            label: "Duration",
+                            label: String(localized: "Duration"),
                             icon: "clock.fill",
                             color: .green
                         )
@@ -42,7 +42,7 @@ struct GymWorkoutDetailView: View {
 
                         WorkoutStatBlock(
                             value: "\(Int(workout.calories))",
-                            label: "Calories",
+                            label: String(localized: "Calories"),
                             icon: "flame.fill",
                             color: .orange
                         )
@@ -52,7 +52,7 @@ struct GymWorkoutDetailView: View {
 
                             WorkoutStatBlock(
                                 value: "\(Int(hr))",
-                                label: "Avg HR",
+                                label: String(localized: "Avg HR"),
                                 icon: "heart.fill",
                                 color: .red
                             )
@@ -65,7 +65,7 @@ struct GymWorkoutDetailView: View {
                     // Exercises
                     if !workout.exercises.isEmpty {
                         VStack(alignment: .leading, spacing: 16) {
-                            Text("Exercises")
+                            Text(String(localized: "Exercises"))
                                 .font(.headline)
 
                             ForEach(workout.exercises) { exercise in
@@ -80,23 +80,23 @@ struct GymWorkoutDetailView: View {
                     // Volume Summary
                     if !workout.exercises.isEmpty {
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("Volume Summary")
+                            Text(String(localized: "Volume Summary"))
                                 .font(.headline)
 
                             HStack {
                                 VolumeStatBox(
                                     value: "\(workout.exercises.count)",
-                                    label: "Exercises"
+                                    label: String(localized: "Exercises")
                                 )
 
                                 VolumeStatBox(
                                     value: "\(totalSets)",
-                                    label: "Total Sets"
+                                    label: String(localized: "Total Sets")
                                 )
 
                                 VolumeStatBox(
                                     value: "\(Int(totalVolume))",
-                                    label: "Volume (kg)"
+                                    label: String(localized: "Volume (kg)")
                                 )
                             }
                         }
@@ -108,7 +108,7 @@ struct GymWorkoutDetailView: View {
                     // Notes
                     if let notes = workout.notes, !notes.isEmpty {
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("Notes")
+                            Text(String(localized: "Notes"))
                                 .font(.headline)
 
                             Text(notes)
@@ -126,7 +126,7 @@ struct GymWorkoutDetailView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") {
+                    Button(String(localized: "Done")) {
                         dismiss()
                     }
                 }
@@ -177,7 +177,7 @@ struct ExerciseCard: View {
 
                 Spacer()
 
-                Text("\(exercise.sets.count) sets")
+                Text(String(localized: "\(exercise.sets.count) sets"))
                     .font(.caption)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
@@ -188,11 +188,11 @@ struct ExerciseCard: View {
             // Sets table
             VStack(spacing: 4) {
                 HStack {
-                    Text("Set")
+                    Text(String(localized: "Set"))
                         .frame(width: 40, alignment: .leading)
-                    Text("Weight")
+                    Text(String(localized: "Weight"))
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    Text("Reps")
+                    Text(String(localized: "Reps"))
                         .frame(width: 50, alignment: .trailing)
                 }
                 .font(.caption)
@@ -208,7 +208,7 @@ struct ExerciseCard: View {
                         if set.isWarmup {
                             HStack(spacing: 4) {
                                 Text("\(Int(set.weight)) kg")
-                                Text("(warmup)")
+                                Text(String(localized: "(warmup)"))
                                     .foregroundStyle(.secondary)
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -231,7 +231,7 @@ struct ExerciseCard: View {
                     Image(systemName: "star.fill")
                         .font(.caption)
                         .foregroundStyle(.yellow)
-                    Text("Best: \(Int(bestSet.weight)) kg x \(bestSet.reps)")
+                    Text(String(localized: "Best: \(Int(bestSet.weight)) kg x \(bestSet.reps)"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

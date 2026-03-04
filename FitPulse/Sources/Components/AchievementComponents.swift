@@ -86,7 +86,7 @@ struct AchievementCard: View {
 
                     Spacer()
 
-                    Text(achievement.tier.rawValue)
+                    Text(achievement.tier.displayName)
                         .font(.caption2)
                         .padding(.horizontal, 6)
                         .padding(.vertical, 2)
@@ -120,7 +120,7 @@ struct AchievementCard: View {
                     HStack {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.green)
-                        Text("Unlocked \(unlockedDate.formatted(.relative(presentation: .named)))")
+                        Text(String(localized: "Unlocked \(unlockedDate.formatted(.relative(presentation: .named)))"))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -203,7 +203,7 @@ struct AchievementUnlockView: View {
                 }
 
                 VStack(spacing: 12) {
-                    Text("Achievement Unlocked!")
+                    Text(String(localized: "Achievement Unlocked!"))
                         .font(.caption)
                         .foregroundStyle(tierColor)
                         .textCase(.uppercase)
@@ -220,7 +220,7 @@ struct AchievementUnlockView: View {
 
                     HStack {
                         Image(systemName: achievement.tier.icon)
-                        Text(achievement.tier.rawValue)
+                        Text(achievement.tier.displayName)
                     }
                     .font(.headline)
                     .foregroundStyle(tierColor)
@@ -228,7 +228,7 @@ struct AchievementUnlockView: View {
                 }
 
                 Button(action: onDismiss) {
-                    Text("Awesome!")
+                    Text(String(localized: "Awesome!"))
                         .font(.headline)
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
@@ -274,7 +274,7 @@ struct AchievementProgressSummary: View {
     var body: some View {
         VStack(spacing: 16) {
             HStack {
-                Text("Achievements")
+                Text(String(localized: "Achievements"))
                     .font(.headline)
                 Spacer()
                 Text("\(summary.unlockedCount)/\(summary.totalAchievements)")
@@ -317,7 +317,7 @@ struct AchievementProgressSummary: View {
             // Recently unlocked
             if !summary.recentlyUnlocked.isEmpty {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Recently Unlocked")
+                    Text(String(localized: "Recently Unlocked"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
 

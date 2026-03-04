@@ -10,7 +10,7 @@ struct InsightsView: View {
                     InsightDetailRow(insight: insight)
                 }
             }
-            .navigationTitle("Insights")
+            .navigationTitle(String(localized: "Insights"))
         }
     }
 
@@ -83,10 +83,10 @@ struct PriorityBadge: View {
 
     private var priorityText: String {
         switch priority {
-        case .critical: return "CRITICAL"
-        case .high: return "HIGH"
-        case .medium: return "MEDIUM"
-        case .low: return "LOW"
+        case .critical: return String(localized: "CRITICAL")
+        case .high: return String(localized: "HIGH")
+        case .medium: return String(localized: "MEDIUM")
+        case .low: return String(localized: "LOW")
         }
     }
 

@@ -83,7 +83,7 @@ struct ChallengeCard: View {
             // Action buttons
             if let onJoin = onJoin, !challenge.isActive && !challenge.isCompleted {
                 Button(action: onJoin) {
-                    Text("Join Challenge")
+                    Text(String(localized: "Join Challenge"))
                         .font(.subheadline.bold())
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
@@ -183,7 +183,7 @@ struct ChallengeCompleteView: View {
                 }
 
                 VStack(spacing: 12) {
-                    Text("Challenge Complete!")
+                    Text(String(localized: "Challenge Complete!"))
                         .font(.title2.bold())
                         .foregroundStyle(.white)
 
@@ -191,14 +191,14 @@ struct ChallengeCompleteView: View {
                         .font(.headline)
                         .foregroundStyle(typeColor)
 
-                    Text("You crushed it! \(challenge.target) \(challenge.type.unit) achieved.")
+                    Text(String(localized: "You crushed it! \(challenge.target) \(challenge.type.unit) achieved."))
                         .font(.subheadline)
                         .foregroundStyle(.white.opacity(0.8))
                         .multilineTextAlignment(.center)
                 }
 
                 Button(action: onDismiss) {
-                    Text("Continue")
+                    Text(String(localized: "Continue"))
                         .font(.headline)
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
@@ -322,17 +322,17 @@ struct NoActiveChallengeCard: View {
                 .foregroundStyle(.blue)
 
             VStack(spacing: 4) {
-                Text("Ready for a Challenge?")
+                Text(String(localized: "Ready for a Challenge?"))
                     .font(.headline)
 
-                Text("Join this week's challenge to push your limits!")
+                Text(String(localized: "Join this week's challenge to push your limits!"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             }
 
             Button(action: onJoinChallenge) {
-                Text("See This Week's Challenge")
+                Text(String(localized: "See This Week's Challenge"))
                     .font(.subheadline.bold())
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
@@ -355,17 +355,17 @@ struct ChallengeStatsView: View {
     var body: some View {
         VStack(spacing: 16) {
             HStack {
-                Text("Challenge Stats")
+                Text(String(localized: "Challenge Stats"))
                     .font(.headline)
                 Spacer()
             }
 
             HStack(spacing: 24) {
-                StatItem(value: "\(stats.totalCompleted)", label: "Completed")
-                StatItem(value: "\(stats.currentStreak)", label: "Week Streak")
+                StatItem(value: "\(stats.totalCompleted)", label: String(localized: "Completed"))
+                StatItem(value: "\(stats.currentStreak)", label: String(localized: "Week Streak"))
 
                 if let type = stats.mostCompletedType {
-                    StatItem(value: type.rawValue, label: "Favorite")
+                    StatItem(value: type.displayName, label: String(localized: "Favorite"))
                 }
             }
         }

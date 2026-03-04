@@ -15,13 +15,13 @@ struct GoalProgressCard: View {
                     .foregroundStyle(trendColor)
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Weight Goal")
+                    Text(String(localized: "Weight Goal"))
                         .font(.subheadline.bold())
 
                     if let prediction = prediction {
                         HStack(spacing: 4) {
                             Image(systemName: prediction.trendDirection.icon)
-                            Text(prediction.trendDirection.rawValue)
+                            Text(prediction.trendDirection.displayName)
                         }
                         .font(.caption)
                         .foregroundStyle(trendColor)
@@ -34,7 +34,7 @@ struct GoalProgressCard: View {
                     Text(String(format: "%.1f kg", currentWeight))
                         .font(.title3.bold())
 
-                    Text("of \(String(format: "%.1f", targetWeight)) kg")
+                    Text(String(localized: "of \(String(format: "%.1f", targetWeight)) kg"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -56,7 +56,7 @@ struct GoalProgressCard: View {
                             Image(systemName: "calendar")
                                 .foregroundStyle(trendColor)
 
-                            Text("On track to reach your goal by")
+                            Text(String(localized: "On track to reach your goal by"))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
 
@@ -76,7 +76,7 @@ struct GoalProgressCard: View {
                     .foregroundStyle(.secondary)
                 }
             } else {
-                Text("Log more weight entries to see your prediction")
+                Text(String(localized: "Log more weight entries to see your prediction"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
@@ -149,7 +149,7 @@ struct GoalProgressArc: View {
                     Text(remainingText)
                         .font(.title2.bold())
 
-                    Text("remaining")
+                    Text(String(localized: "remaining"))
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
@@ -209,15 +209,15 @@ struct CompactGoalProgress: View {
                 }
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Goal Progress")
+                    Text(String(localized: "Goal Progress"))
                         .font(.subheadline.bold())
 
                     if let prediction = prediction {
-                        Text(prediction.trendDirection.rawValue)
+                        Text(prediction.trendDirection.displayName)
                             .font(.caption)
                             .foregroundStyle(trendColor)
                     } else {
-                        Text("Tracking...")
+                        Text(String(localized: "Tracking..."))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -230,7 +230,7 @@ struct CompactGoalProgress: View {
                         Text("\(weeks)")
                             .font(.title3.bold())
                             .foregroundStyle(trendColor)
-                        Text("weeks")
+                        Text(String(localized: "weeks"))
                             .font(.caption2)
                             .foregroundStyle(.secondary)
                     }
@@ -266,7 +266,7 @@ struct GoalWeightTrendChart: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Weight Trend")
+            Text(String(localized: "Weight Trend"))
                 .font(.headline)
 
             GeometryReader { geo in
@@ -319,14 +319,14 @@ struct GoalWeightTrendChart: View {
 
             // Labels
             HStack {
-                Text("Target: \(String(format: "%.1f", targetWeight)) kg")
+                Text(String(localized: "Target: \(String(format: "%.1f", targetWeight)) kg"))
                     .font(.caption)
                     .foregroundStyle(.green)
 
                 Spacer()
 
                 if let latest = entries.last {
-                    Text("Current: \(String(format: "%.1f", latest.weightKg)) kg")
+                    Text(String(localized: "Current: \(String(format: "%.1f", latest.weightKg)) kg"))
                         .font(.caption)
                         .foregroundStyle(.blue)
                 }

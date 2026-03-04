@@ -20,7 +20,7 @@ struct TodaysPriorityCard: View {
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("TODAY'S PRIORITY")
+                    Text(String(localized: "TODAY'S PRIORITY"))
                         .font(.caption.bold())
                         .foregroundStyle(.secondary)
                         .tracking(1)
@@ -105,8 +105,8 @@ struct TodaysPriority {
         if let recovery = recoveryScore, recovery < 40 {
             return TodaysPriority(
                 type: .recovery,
-                title: "Rest & Recover",
-                subtitle: "Your body needs recovery. Take it easy today.",
+                title: String(localized: "Rest & Recover"),
+                subtitle: String(localized: "Your body needs recovery. Take it easy today."),
                 icon: "bed.double.fill",
                 color: .purple,
                 actionText: nil,
@@ -118,11 +118,11 @@ struct TodaysPriority {
         if hydrationProgress < 0.3 {
             return TodaysPriority(
                 type: .hydration,
-                title: "Hydrate Now",
-                subtitle: "You're behind on water. Drink a glass to boost energy.",
+                title: String(localized: "Hydrate Now"),
+                subtitle: String(localized: "You're behind on water. Drink a glass to boost energy."),
                 icon: "drop.fill",
                 color: .cyan,
-                actionText: "Log Water",
+                actionText: String(localized: "Log Water"),
                 action: .logWater
             )
         }
@@ -133,11 +133,11 @@ struct TodaysPriority {
             if remaining > 0 {
                 return TodaysPriority(
                     type: .workout,
-                    title: "Great Day to Train",
-                    subtitle: "Recovery is optimal. \(remaining) workout\(remaining == 1 ? "" : "s") left this week.",
+                    title: String(localized: "Great Day to Train"),
+                    subtitle: String(localized: "Recovery is optimal. \(remaining) workout(s) left this week."),
                     icon: "flame.fill",
                     color: .orange,
-                    actionText: "Start Workout",
+                    actionText: String(localized: "Start Workout"),
                     action: .startWorkout
                 )
             }
@@ -148,11 +148,11 @@ struct TodaysPriority {
         if proteinRemaining > 30 {
             return TodaysPriority(
                 type: .nutrition,
-                title: "Protein Boost Needed",
-                subtitle: "\(Int(proteinRemaining))g protein left today. Time for a protein-rich meal.",
+                title: String(localized: "Protein Boost Needed"),
+                subtitle: String(localized: "\(Int(proteinRemaining))g protein left today. Time for a protein-rich meal."),
                 icon: "fork.knife",
                 color: .green,
-                actionText: "Log Meal",
+                actionText: String(localized: "Log Meal"),
                 action: .logMeal
             )
         }
@@ -161,8 +161,8 @@ struct TodaysPriority {
         if hydrationProgress >= 0.8 && (caloriesConsumed / calorieTarget) > 0.7 {
             return TodaysPriority(
                 type: .celebration,
-                title: "You're Crushing It!",
-                subtitle: "Nutrition and hydration on point. Keep the momentum going.",
+                title: String(localized: "You're Crushing It!"),
+                subtitle: String(localized: "Nutrition and hydration on point. Keep the momentum going."),
                 icon: "star.fill",
                 color: .yellow,
                 actionText: nil,
@@ -173,11 +173,11 @@ struct TodaysPriority {
         // Default - balanced day
         return TodaysPriority(
             type: .nutrition,
-            title: "Stay on Track",
-            subtitle: "Log your meals to hit your nutrition targets.",
+            title: String(localized: "Stay on Track"),
+            subtitle: String(localized: "Log your meals to hit your nutrition targets."),
             icon: "chart.line.uptrend.xyaxis",
             color: .blue,
-            actionText: "Log Meal",
+            actionText: String(localized: "Log Meal"),
             action: .logMeal
         )
     }

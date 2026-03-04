@@ -8,6 +8,8 @@ struct HomeView: View {
     @State private var showingWeightLog = false
     @State private var showingWorkout = false
     @State private var showingEngagement = false
+    @State private var showingGymView = false
+    @State private var showingNutritionView = false
 
     var body: some View {
         NavigationStack {
@@ -76,26 +78,37 @@ struct HomeView: View {
                             .padding(.horizontal)
                         }
 
+                        // Active Plans
+                        if viewModel.currentWorkoutPlan != nil || viewModel.currentMealPlan != nil {
+                            ActivePlansSection(
+                                workoutPlan: viewModel.currentWorkoutPlan,
+                                mealPlan: viewModel.currentMealPlan,
+                                onWorkoutPlanTap: { showingGymView = true },
+                                onMealPlanTap: { showingNutritionView = true }
+                            )
+                            .padding(.horizontal)
+                        }
+
                         // Quick Stats Row
                         HStack(spacing: 12) {
                             QuickStatCard(
                                 icon: "flame.fill",
                                 value: "\(viewModel.caloriesBurned)",
-                                label: "Burned",
+                                label: String(localized: "Burned"),
                                 color: .orange
                             )
 
                             QuickStatCard(
                                 icon: "fork.knife",
                                 value: "\(viewModel.caloriesConsumed)",
-                                label: "Eaten",
+                                label: String(localized: "Eaten"),
                                 color: .green
                             )
 
                             QuickStatCard(
                                 icon: "drop.fill",
                                 value: viewModel.hydrationText,
-                                label: "Water",
+                                label: String(localized: "Water"),
                                 color: .cyan
                             )
                         }
@@ -148,7 +161,7 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showingMealLog) {
                 NavigationStack {
-                    NutritionView()
+                    NutritionView(autoShowMealLogger: true)
                 }
             }
             .sheet(isPresented: $showingWeightLog) {
@@ -163,11 +176,21 @@ struct HomeView: View {
             }
             .sheet(isPresented: $showingWorkout) {
                 NavigationStack {
-                    GymView()
+                    GymView(autoShowWorkoutPlanGenerator: true)
                 }
             }
             .sheet(isPresented: $showingEngagement) {
                 EngagementView()
+            }
+            .sheet(isPresented: $showingGymView) {
+                NavigationStack {
+                    GymView()
+                }
+            }
+            .sheet(isPresented: $showingNutritionView) {
+                NavigationStack {
+                    NutritionView()
+                }
             }
         }
     }
@@ -222,7 +245,7 @@ struct TodayActivityCard: View {
     var body: some View {
         VStack(spacing: 12) {
             HStack {
-                Text("Today's Activity")
+                Text(String(localized: "Today's Activity"))
                     .font(.headline)
                 Spacer()
             }
@@ -298,27 +321,27 @@ struct QuickWaterLogSheet: View {
 
     var body: some View {
         VStack(spacing: 24) {
-            Text("Log Water")
+            Text(String(localized: "Log Water"))
                 .font(.title2.bold())
 
             HStack(spacing: 16) {
-                WaterButton(amount: 250, label: "Glass", icon: "drop.fill") {
+                WaterButton(amount: 250, label: String(localized: "Glass"), icon: "drop.fill") {
                     onLog(250)
                     dismiss()
                 }
 
-                WaterButton(amount: 500, label: "Bottle", icon: "waterbottle.fill") {
+                WaterButton(amount: 500, label: String(localized: "Bottle"), icon: "waterbottle.fill") {
                     onLog(500)
                     dismiss()
                 }
 
-                WaterButton(amount: 750, label: "Large", icon: "drop.circle.fill") {
+                WaterButton(amount: 750, label: String(localized: "Large"), icon: "drop.circle.fill") {
                     onLog(750)
                     dismiss()
                 }
             }
 
-            Button("Cancel") {
+            Button(String(localized: "Cancel")) {
                 dismiss()
             }
             .foregroundStyle(.secondary)
@@ -353,6 +376,83 @@ struct WaterButton: View {
             .clipShape(RoundedRectangle(cornerRadius: 16))
         }
         .buttonStyle(.plain)
+    }
+}
+
+// MARK: - Active Plans Section
+private struct ActivePlansSection: View {
+    let workoutPlan: WorkoutPlan?
+    let mealPlan: DayMealPlan?
+    let onWorkoutPlanTap: () -> Void
+    let onMealPlanTap: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text(String(localized: "Active Plans"))
+                .font(.headline)
+
+            if let plan = workoutPlan {
+                Button(action: onWorkoutPlanTap) {
+                    HStack(spacing: 12) {
+                        Image(systemName: "dumbbell.fill")
+                            .font(.title3)
+                            .foregroundStyle(.blue)
+                            .frame(width: 32)
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(plan.name)
+                                .font(.subheadline.bold())
+                                .foregroundStyle(.primary)
+
+                            Text(String(localized: "\(plan.days.count)-day program"))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        Spacer()
+
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundStyle(.tertiary)
+                    }
+                    .padding()
+                    .background(.ultraThinMaterial)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                }
+                .buttonStyle(.plain)
+            }
+
+            if let plan = mealPlan {
+                Button(action: onMealPlanTap) {
+                    HStack(spacing: 12) {
+                        Image(systemName: "leaf.fill")
+                            .font(.title3)
+                            .foregroundStyle(.green)
+                            .frame(width: 32)
+
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(String(localized: "Today's Meal Plan"))
+                                .font(.subheadline.bold())
+                                .foregroundStyle(.primary)
+
+                            Text(String(localized: "\(plan.totalPlannedCalories) kcal target"))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+
+                        Spacer()
+
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundStyle(.tertiary)
+                    }
+                    .padding()
+                    .background(.ultraThinMaterial)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                }
+                .buttonStyle(.plain)
+            }
+        }
     }
 }
 
