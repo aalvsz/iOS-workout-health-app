@@ -2,5 +2,5 @@
   "test_command": "echo 'tests pass'",
   "labels": ["auto"],
   "dry_run": false,
-  "max_issues_per_session": 1
+  "max_issues_per_session": 5
 }
