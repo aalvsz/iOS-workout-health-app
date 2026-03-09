@@ -36,44 +36,12 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          show_full_output: true
           additional_permissions: |
             actions: read
-
-          # For new issues: implement and create PR
-          # For @claude mentions: follow the instructions in the comment
-          prompt: |
-            ${{ github.event_name == 'issues' && format('
-            You are an autonomous issue worker. Implement this issue completely.
-
-            Issue #{0}: {1}
-
-            {2}
-
-            Instructions:
-            1. Read and understand the issue requirements
-            2. Explore the codebase to understand the context
-            3. Implement the changes
-            4. Run any available tests to verify your changes work
-            5. Create a commit with message: "feat: <description> (closes #{0})"
-
-            Rules:
-            - Only change what the issue asks for
-            - Follow existing code patterns and conventions
-            - Write tests if the codebase has tests
-            - Keep changes small and focused
-            - Do NOT modify .env files, CI configs, or other infrastructure files
-            ', github.event.issue.number, github.event.issue.title, github.event.issue.body) || '' }}
-
-          # Allow Claude to use git, gh CLI, and run tests
-          allowed_tools: |
-            Bash(git:*)
-            Bash(gh:*)
-            Bash(npm:*)
-            Bash(yarn:*)
-            Bash(pytest:*)
-            Bash(make:*)
-            Read
-            Write
-            Edit
-            Glob
-            Grep
+          prompt: >
+            You are an autonomous issue worker. Your job is to implement the
+            requested changes, test them, and commit. Follow existing code
+            patterns. Only change what is asked for. Do not modify .env files
+            or CI configs. If the codebase has tests, write tests for your
+            changes too. Commit with a message like "feat: description (closes #NUMBER)".
