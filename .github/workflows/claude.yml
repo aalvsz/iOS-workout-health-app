@@ -11,9 +11,54 @@ on:
     types: [submitted]
 
 jobs:
-  claude:
+  # Job for new issues — auto-implement
+  implement-issue:
+    if: github.event_name == 'issues' && github.event.action == 'opened'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          show_full_output: true
+          trigger_phrase: ""
+          prompt: |
+            Implement GitHub issue #${{ github.event.issue.number }}.
+
+            Title: ${{ github.event.issue.title }}
+
+            Description:
+            ${{ github.event.issue.body }}
+
+            Instructions:
+            1. Read and understand the issue requirements above
+            2. Explore the codebase to understand context and patterns
+            3. Implement the changes
+            4. Run any available tests to verify your changes work
+            5. Commit with message: "feat: <description> (closes #${{ github.event.issue.number }})"
+
+            Rules:
+            - Only change what the issue asks for
+            - Follow existing code patterns and conventions
+            - Write tests if the codebase has tests
+            - Keep changes small and focused
+            - Do NOT modify .env files, CI configs, or infrastructure files
+
+  # Job for @claude mentions — follow instructions in comment
+  claude-mention:
     if: |
-      (github.event_name == 'issues' && github.event.action == 'opened') ||
       (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
       (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
       (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude'))
@@ -32,16 +77,8 @@ jobs:
           fetch-depth: 1
 
       - name: Run Claude Code
-        id: claude
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          show_full_output: true
           additional_permissions: |
             actions: read
-          prompt: >
-            You are an autonomous issue worker. Your job is to implement the
-            requested changes, test them, and commit. Follow existing code
-            patterns. Only change what is asked for. Do not modify .env files
-            or CI configs. If the codebase has tests, write tests for your
-            changes too. Commit with a message like "feat: description (closes #NUMBER)".
