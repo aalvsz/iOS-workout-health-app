@@ -48,7 +48,10 @@ jobs:
             2. Explore the codebase to understand context and patterns
             3. Implement the changes
             4. Run any available tests to verify your changes work
-            5. Commit with message: "feat: <description> (closes #${{ github.event.issue.number }})"
+            5. Create a new branch: git checkout -b claude/${{ github.event.issue.number }}-impl
+            6. Commit with message: "feat: <description> (closes #${{ github.event.issue.number }})"
+            7. Push the branch: git push -u origin HEAD
+            8. Create a pull request: gh pr create --title "<title>" --body "Closes #${{ github.event.issue.number }}"
 
             Rules:
             - Only change what the issue asks for
@@ -56,6 +59,7 @@ jobs:
             - Write tests if the codebase has tests
             - Keep changes small and focused
             - Do NOT modify .env files, CI configs, or infrastructure files
+            - You MUST push and create a PR at the end
 
   # Job for @claude mentions — follow instructions in comment
   claude-mention:
